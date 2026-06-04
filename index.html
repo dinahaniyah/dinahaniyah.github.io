@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dina Haniyah — BI Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Syne+Mono&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & TOKENS
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal:       #1D9E75;
+  --teal-l:     #5DCAA5;
+  --teal-dim:   #0F6E56;
+  --teal-ghost: rgba(29,158,117,0.08);
+  --teal-glow:  rgba(29,158,117,0.14);
+  --bg:         #090A09;
+  --bg-card:    #111311;
+  --bg-surface: #161816;
+  --line:       rgba(255,255,255,0.06);
+  --line-m:     rgba(255,255,255,0.10);
+  --text-1:     #EDEAE2;
+  --text-2:     #7A8079;
+  --text-3:     #3E4240;
+  --serif:      'Cormorant Garamond', Georgia, serif;
+  --mono:       'Syne Mono', monospace;
+  --sans:       'Syne', sans-serif;
+  --nav-h:      64px;
+  --ease:       cubic-bezier(0.16,1,0.3,1);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-1);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ============================================================
+   CUSTOM CURSOR (desktop only)
+============================================================ */
+.cursor-dot {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: var(--teal-l);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  mix-blend-mode: screen;
+  transition: opacity 0.3s;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(93,202,165,0.35);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: width 0.25s var(--ease), height 0.25s var(--ease), border-color 0.25s;
+}
+@media (hover: none) {
+  .cursor-dot, .cursor-ring { display: none !important; }
+  body { cursor: auto; }
+  a, button, [role="tab"] { cursor: auto; }
+}
+@media (hover: hover) {
+  a, button, [role="tab"] { cursor: none; }
+}
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--teal-dim); border-radius: 99px; }
+
+/* ============================================================
+   NAV
+============================================================ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+  transition: background 0.4s, border-color 0.4s;
+  border-bottom: 0.5px solid transparent;
+}
+nav.scrolled {
+  background: rgba(9,10,9,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom-color: var(--line);
+}
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal-l);
+  white-space: nowrap;
+}
+.nav-logo span { color: var(--text-3); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative; padding-bottom: 2px;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  height: 1px; width: 0; background: var(--teal);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--text-1); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--teal-l);
+  border: 0.5px solid rgba(93,202,165,0.3);
+  padding: 0.45rem 1rem; border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.nav-cta:hover { background: var(--teal-ghost); border-color: var(--teal); }
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+}
+
+/* ============================================================
+   HERO
+============================================================ */
+#hero {
+  min-height: 100vh; min-height: 100svh;
+  display: flex; align-items: center;
+  padding: calc(var(--nav-h) + 4rem) clamp(1.25rem, 4vw, 3.5rem) 5rem;
+  position: relative; overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 10%, transparent 100%);
+}
+.hero-aura {
+  position: absolute; width: 700px; height: 700px;
+  top: -150px; right: -150px;
+  background: radial-gradient(ellipse, rgba(29,158,117,0.08) 0%, transparent 65%);
+  pointer-events: none;
+  animation: pulse-aura 9s ease-in-out infinite alternate;
+}
+.hero-aura2 {
+  position: absolute; width: 450px; height: 450px;
+  bottom: -50px; left: 5%;
+  background: radial-gradient(ellipse, rgba(29,158,117,0.04) 0%, transparent 65%);
+  pointer-events: none;
+  animation: pulse-aura 7s ease-in-out 2s infinite alternate;
+}
+@keyframes pulse-aura {
+  from { opacity: 0.5; transform: scale(1); }
+  to   { opacity: 1;   transform: scale(1.08); }
+}
+.hero-content { position: relative; z-index: 1; max-width: 900px; width: 100%; }
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  opacity: 0; animation: fade-up 0.8s var(--ease) 0.1s forwards;
+}
+.eyebrow-line { flex: 0 0 28px; height: 1px; background: var(--teal); }
+.eyebrow-text {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-l);
+}
+h1.hero-heading {
+  font-family: var(--serif);
+  font-size: clamp(3.2rem, 9vw, 7.5rem);
+  font-weight: 300; line-height: 0.98;
+  color: var(--text-1); margin-bottom: 1.75rem;
+  opacity: 0; animation: fade-up 0.9s var(--ease) 0.25s forwards;
+  letter-spacing: -0.01em;
+}
+h1.hero-heading em { font-style: italic; color: var(--teal-l); }
+.hero-sub {
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  color: var(--text-2); max-width: 500px;
+  line-height: 1.8; font-weight: 400; margin-bottom: 3rem;
+  opacity: 0; animation: fade-up 0.9s var(--ease) 0.4s forwards;
+}
+
+/* Hero stats bar */
+.hero-stats {
+  display: flex; gap: 0;
+  border: 0.5px solid var(--line); border-radius: 3px;
+  overflow: hidden; margin-bottom: 2.5rem;
+  opacity: 0; animation: fade-up 0.9s var(--ease) 0.55s forwards;
+}
+.stat {
+  flex: 1; padding: 1.1rem 1.25rem;
+  border-right: 0.5px solid var(--line);
+}
+.stat:last-child { border-right: none; }
+.stat-n {
+  font-family: var(--serif); font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 300; color: var(--text-1);
+  line-height: 1; display: block;
+}
+.stat-n .hi { color: var(--teal-l); }
+.stat-l {
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-3); margin-top: 0.35rem; display: block;
+}
+/* cert stat cells */
+.stat-cert { flex: 1.5; padding: 0; min-width: 0; }
+.cert-badge-hero {
+  display: flex; align-items: center; gap: 0.8rem;
+  width: 100%; height: 100%;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(29,158,117,0.07) 0%, rgba(29,158,117,0.02) 100%);
+  position: relative; overflow: hidden;
+}
+.cert-badge-hero::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 2px; height: 100%;
+  background: linear-gradient(to bottom, var(--teal), transparent);
+}
+.cert-badge-hero--google {
+  background: linear-gradient(135deg, rgba(66,133,244,0.07) 0%, rgba(29,158,117,0.02) 100%);
+  border-left: 0.5px solid var(--line);
+}
+.cert-badge-hero--google::before { background: linear-gradient(to bottom, #4285f4, transparent); }
+.cert-badge-icon {
+  width: 34px; height: 34px; flex-shrink: 0;
+  background: rgba(29,158,117,0.12);
+  border: 0.5px solid rgba(93,202,165,0.25);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.cert-badge-icon svg { width: 14px; height: 14px; stroke: var(--teal-l); fill: none; stroke-width: 1.5; }
+.cert-badge-icon--google { background: rgba(66,133,244,0.1); border-color: rgba(66,133,244,0.2); }
+.cert-badge-icon--google svg { stroke: #7ab3f7; }
+.cert-badge-title {
+  font-family: var(--mono); font-size: 0.68rem;
+  font-weight: 500; letter-spacing: 0.05em; color: var(--text-1);
+  margin-bottom: 0.2rem; line-height: 1.2;
+}
+.cert-badge-sub {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3);
+  line-height: 1.3;
+}
+/* prevent flex children from overflowing their containers */
+.cert-badge-hero > div:last-child { min-width: 0; flex: 1; }
+.panel-content { min-width: 0; }
+.panel-visual { min-width: 0; }
+
+/* Hero actions */
+.hero-actions {
+  display: flex; gap: 0.875rem; align-items: center; flex-wrap: wrap;
+  opacity: 0; animation: fade-up 0.9s var(--ease) 0.7s forwards;
+}
+.btn-primary {
+  background: var(--teal); color: #fff;
+  padding: 0.8rem 2rem;
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  text-decoration: none; border-radius: 2px;
+  transition: background 0.2s, transform 0.2s;
+  display: inline-block; border: none; white-space: nowrap;
+}
+.btn-primary:hover { background: var(--teal-dim); transform: translateY(-2px); }
+.btn-ghost {
+  color: var(--text-2); padding: 0.8rem 2rem;
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  text-decoration: none; border: 0.5px solid var(--line-m); border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  display: inline-block; white-space: nowrap;
+}
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal-l); transform: translateY(-2px); }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+  opacity: 0; animation: fade-up 1s var(--ease) 1.3s forwards;
+}
+.scroll-hint span {
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-3);
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, var(--teal), transparent);
+  animation: scroll-drop 2.2s ease-in-out 1.6s infinite;
+}
+@keyframes scroll-drop {
+  0%   { transform: scaleY(0); transform-origin: top;    opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top;    opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+/* ============================================================
+   SHARED
+============================================================ */
+.reveal {
+  opacity: 0; transform: translateY(22px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; }
+.reveal-d2 { transition-delay: 0.2s; }
+.reveal-d3 { transition-delay: 0.3s; }
+.section-eyebrow {
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.875rem;
+}
+.section-num {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-l);
+}
+h2.section-heading {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  font-weight: 300; color: var(--text-1); line-height: 1.05;
+}
+h2.section-heading em { font-style: italic; color: var(--teal-l); }
+
+/* ============================================================
+   WORK SECTION
+============================================================ */
+#work {
+  padding: 6rem clamp(1.25rem, 4vw, 3.5rem) 7rem;
+  border-top: 0.5px solid var(--line);
+}
+.work-intro {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 1.5rem; margin-bottom: 3.5rem; flex-wrap: wrap;
+}
+.work-intro-right {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-3); text-align: right; line-height: 1.8; flex-shrink: 1;
+}
+
+/* ── Tab list ── */
+.tab-list {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 0.5px solid var(--line);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap;
+}
+.tab-list::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 0.5px solid var(--line-m);
+  border-radius: 999px;
+  padding: 0 1.25rem 0 0.5rem;
+  height: 40px;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  transition: color 0.25s, background 0.25s, border-color 0.25s, transform 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+  position: relative;
+  top: 0;
+}
+.tab-btn:hover {
+  color: var(--text-2);
+  border-color: rgba(93,202,165,0.3);
+  background: var(--bg-surface);
+  transform: translateY(-1px);
+}
+.tab-btn.active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(29,158,117,0.3);
+}
+
+/* number bubble inside pill */
+.tab-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: var(--text-3);
+  flex-shrink: 0;
+  transition: background 0.25s, color 0.25s;
+  letter-spacing: 0;
+}
+.tab-btn:hover .tab-num {
+  background: rgba(255,255,255,0.09);
+  color: var(--text-2);
+}
+.tab-btn.active .tab-num {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ── Tab panel ── */
+.tab-panels { position: relative; }
+.tab-panel {
+  display: none;
+  animation: panel-in 0.4s var(--ease) forwards;
+}
+.tab-panel.active {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-top: 3.5rem;
+}
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Panel left: content ── */
+.panel-industry {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--teal-l);
+  background: var(--teal-ghost);
+  border: 0.5px solid rgba(93,202,165,0.2);
+  padding: 0.28rem 0.7rem; border-radius: 2px; margin-bottom: 1.25rem;
+}
+.industry-dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; }
+.panel-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  font-weight: 300; color: var(--text-1);
+  line-height: 1.1; margin-bottom: 1rem;
+}
+.panel-desc {
+  font-size: clamp(0.82rem, 1.5vw, 0.92rem);
+  color: var(--text-2); line-height: 1.8;
+  font-weight: 400; margin-bottom: 1.75rem;
+}
+
+/* Metrics */
+.panel-metrics {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0; border: 0.5px solid var(--line);
+  border-radius: 3px; overflow: hidden; margin-bottom: 1.75rem;
+}
+.p-metric {
+  padding: 0.875rem 1rem;
+  border-right: 0.5px solid var(--line);
+  background: var(--bg-card);
+}
+.p-metric:last-child { border-right: none; }
+.pm-val {
+  font-family: var(--serif); font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+  font-weight: 300; color: var(--teal-l);
+  display: block; line-height: 1; margin-bottom: 0.2rem;
+}
+.pm-lbl {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3);
+}
+
+/* Tools */
+.panel-tools-label {
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-3); margin-bottom: 0.65rem;
+}
+.panel-tools { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 2rem; }
+.tool-pill {
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-2); border: 0.5px solid var(--line-m);
+  padding: 0.28rem 0.65rem; border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.tool-pill:hover { color: var(--teal-l); border-color: rgba(93,202,165,0.25); background: var(--teal-ghost); }
+
+/* CTA */
+.panel-cta { display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap; }
+.btn-live {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  background: var(--teal); color: #fff;
+  padding: 0.7rem 1.5rem;
+  font-family: var(--mono); font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  text-decoration: none; border-radius: 2px;
+  transition: background 0.2s, transform 0.2s; white-space: nowrap;
+}
+.btn-live:hover { background: var(--teal-dim); transform: translateY(-1px); }
+.btn-live svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-live-disabled {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  color: var(--text-3); padding: 0.7rem 1.5rem;
+  font-family: var(--mono); font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  border: 0.5px solid var(--line); border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* ── Panel right: screenshot carousel ── */
+.panel-visual { position: relative; }
+
+.screenshot-frame {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--line);
+  border-radius: 6px; overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.45), 0 0 60px rgba(29,158,117,0.03);
+  transition: border-color 0.3s;
+}
+.screenshot-frame:hover { border-color: rgba(93,202,165,0.2); }
+.screenshot-bar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.6rem 0.875rem;
+  background: var(--bg-card); border-bottom: 0.5px solid var(--line);
+}
+.sbar-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line-m); }
+.sbar-url {
+  flex: 1; height: 18px; background: var(--bg-surface);
+  border-radius: 3px; margin: 0 0.4rem;
+  display: flex; align-items: center; padding: 0 0.5rem;
+  overflow: hidden;
+}
+.sbar-url-text {
+  font-family: var(--mono); font-size: 0.5rem;
+  color: var(--text-3); letter-spacing: 0.05em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── Inner screenshot carousel ── */
+.sc-carousel { position: relative; overflow: hidden; }
+.sc-track {
+  display: flex;
+  transition: transform 0.45s var(--ease);
+  will-change: transform;
+}
+.sc-slide {
+  flex-shrink: 0;
+  width: 100%;
+}
+.sc-slide-inner {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.sc-slide-inner img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  display: block;
+  transition: transform 5s ease;
+  user-select: none; pointer-events: none;
+  -webkit-user-drag: none;
+}
+.screenshot-frame:hover .sc-slide-inner img { transform: translateY(-10%); }
+
+/* placeholder */
+.screenshot-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1rem;
+  background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg) 100%);
+  padding: 1.5rem;
+}
+.ph-bars {
+  display: flex; align-items: flex-end; gap: 4px; height: 60px;
+}
+.ph-bar {
+  width: 9px; background: rgba(29,158,117,0.18); border-radius: 2px 2px 0 0;
+}
+.ph-bar.hi { background: rgba(93,202,165,0.45); }
+.ph-lines { display: flex; flex-direction: column; gap: 5px; width: 130px; }
+.ph-line { height: 2.5px; background: var(--line-m); border-radius: 99px; }
+.ph-line.short { width: 62%; }
+.upload-hint {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-family: var(--mono); font-size: 0.56rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(93,202,165,0.35);
+  border: 0.5px dashed rgba(93,202,165,0.18);
+  padding: 0.45rem 0.875rem; border-radius: 2px;
+  text-align: center;
+}
+.upload-hint svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1.5; flex-shrink: 0; }
+
+/* ── Carousel controls bar ── */
+.sc-controls {
+  display: flex; align-items: center;
+  padding: 0.6rem 0.875rem;
+  background: var(--bg-card); border-top: 0.5px solid var(--line);
+  gap: 0.75rem;
+}
+.sc-page-label {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-3); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sc-dots { display: flex; gap: 0.3rem; align-items: center; }
+.sc-dot {
+  width: 16px; height: 2px;
+  background: var(--line-m); border-radius: 99px;
+  cursor: pointer; transition: background 0.25s, width 0.25s;
+  border: none; padding: 0;
+}
+.sc-dot.active { background: var(--teal); width: 26px; }
+.sc-arrows { display: flex; gap: 0.35rem; }
+.sc-arr {
+  width: 28px; height: 28px;
+  border: 0.5px solid var(--line-m);
+  background: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, background 0.2s; flex-shrink: 0;
+}
+.sc-arr:hover { border-color: var(--teal); background: var(--teal-ghost); }
+.sc-arr svg { width: 11px; height: 11px; stroke: var(--text-2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sc-arr:hover svg { stroke: var(--teal-l); }
+
+/* glow */
+.frame-glow {
+  position: absolute; bottom: -35px; left: 10%; right: 10%;
+  height: 50px; background: var(--teal-glow);
+  filter: blur(28px); border-radius: 50%;
+  pointer-events: none; opacity: 0; transition: opacity 0.4s;
+}
+.screenshot-frame:hover ~ .frame-glow { opacity: 1; }
+
+/* ── Tab progress bar ── */
+.tab-progress {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 2.5rem; border-top: 0.5px solid var(--line); margin-top: 3.5rem;
+  flex-wrap: wrap; gap: 1rem;
+}
+.tp-dots { display: flex; gap: 0.4rem; }
+.tp-dot {
+  width: 20px; height: 2px; background: var(--line-m);
+  border-radius: 99px; cursor: pointer;
+  transition: background 0.3s, width 0.3s; border: none; padding: 0;
+}
+.tp-dot.active { background: var(--teal); width: 36px; }
+.tp-label {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.14em; color: var(--text-3);
+}
+.tp-arrows { display: flex; gap: 0.5rem; }
+.tp-arr {
+  width: 36px; height: 36px;
+  border: 0.5px solid var(--line-m); background: none;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.tp-arr:hover { border-color: var(--teal); background: var(--teal-ghost); }
+.tp-arr svg { width: 13px; height: 13px; stroke: var(--text-2); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tp-arr:hover svg { stroke: var(--teal-l); }
+
+/* ============================================================
+   CONTACT
+============================================================ */
+#contact {
+  border-top: 0.5px solid var(--line);
+  padding: 7rem clamp(1.25rem, 4vw, 3.5rem);
+}
+.contact-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 6rem); align-items: center;
+}
+.contact-tagline {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 300; color: var(--text-1); line-height: 1.15;
+  margin: 1.25rem 0 1rem;
+}
+.contact-tagline em { font-style: italic; color: var(--teal-l); }
+.contact-note { font-size: clamp(0.85rem, 1.5vw, 0.9rem); color: var(--text-2); line-height: 1.75; }
+.contact-links { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.875rem; }
+.contact-row {
+  display: flex; align-items: center; justify-content: space-between;
+  border: 0.5px solid var(--line); border-radius: 3px;
+  padding: 1rem 1.25rem; text-decoration: none;
+  transition: border-color 0.25s, background 0.25s;
+}
+.contact-row:hover { border-color: rgba(93,202,165,0.3); background: var(--teal-ghost); }
+.cr-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3); margin-bottom: 3px; }
+.cr-value { font-size: clamp(0.8rem, 1.5vw, 0.88rem); color: var(--text-1); word-break: break-word; overflow-wrap: anywhere; }
+.cr-arrow { color: var(--text-3); font-size: 1rem; transition: transform 0.25s, color 0.25s; flex-shrink: 0; margin-left: 0.5rem; }
+.contact-row:hover .cr-arrow { transform: translate(3px,-3px); color: var(--teal-l); }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+  padding: 1.5rem clamp(1.25rem, 4vw, 3.5rem);
+  border-top: 0.5px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 0.5rem;
+}
+.footer-l { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); letter-spacing: 0.08em; }
+.footer-r { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); font-style: italic; }
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   GLOBAL OVERFLOW GUARD
+============================================================ */
+html, body { max-width: 100%; overflow-x: hidden; }
+img, video, iframe { max-width: 100%; }
+.panel-visual, .screenshot-frame, .sc-carousel { max-width: 100%; }
+
+/* ============================================================
+   RESPONSIVE — large tablet  (≤ 960px)
+============================================================ */
+@media (max-width: 960px) {
+  /* panel: single column, screenshot on top */
+  .tab-panel.active {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 2.5rem;
+  }
+  .panel-visual { order: -1; }
+  .frame-glow { display: none; }
+
+  /* work intro: allow right label to wrap below */
+  .work-intro { align-items: flex-start; }
+  .work-intro-right { flex-shrink: 1; text-align: left; }
+}
+
+/* ============================================================
+   RESPONSIVE — tablet  (≤ 768px)
+============================================================ */
+@media (max-width: 768px) {
+  /* hero stats: switch to 2-col grid so certs don't crush */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 3px;
+  }
+  /* years: spans full width on its own row */
+  .stat.stat-plain {
+    grid-column: span 2;
+    border-right: none;
+    border-bottom: 0.5px solid var(--line);
+  }
+  /* cert cells: each takes one column */
+  .stat-cert {
+    flex: unset;
+    border-right: none;
+    border-bottom: none;
+  }
+  .stat-cert:first-of-type {
+    border-right: 0.5px solid var(--line) !important;
+  }
+  .cert-badge-hero {
+    border-left: none;
+    height: 100%;
+  }
+  .cert-badge-hero--google {
+    border-left: none;
+  }
+
+  /* contact: single column */
+  .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+/* ============================================================
+   RESPONSIVE — mobile  (≤ 560px)
+============================================================ */
+@media (max-width: 560px) {
+  /* hero: tighten top padding */
+  #hero { padding-top: calc(var(--nav-h) + 2.5rem); padding-bottom: 4rem; }
+
+  /* hero stats: fully stacked single column */
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat.stat-plain {
+    grid-column: unset;
+    border-bottom: 0.5px solid var(--line);
+    border-right: none;
+  }
+  .stat-cert {
+    border-right: none !important;
+    border-bottom: 0.5px solid var(--line);
+  }
+  .stat-cert:last-child { border-bottom: none; }
+  .cert-badge-hero,
+  .cert-badge-hero--google { border-left: none; }
+
+  /* hero actions: full-width stacked buttons */
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .btn-primary, .btn-ghost {
+    text-align: center;
+    padding: 0.875rem 1.25rem;
+    justify-content: center;
+    display: flex;
+  }
+
+  /* hide scroll hint on very small screens */
+  .scroll-hint { display: none; }
+
+  /* work section tighter */
+  #work { padding-top: 4rem; padding-bottom: 5rem; }
+  .work-intro { margin-bottom: 2rem; gap: 0.75rem; }
+  .work-intro-right { display: none; } /* redundant info on mobile */
+
+  /* tab bar: tighter pills on mobile */
+  .tab-list { gap: 0.375rem; padding-bottom: 1.5rem; }
+  .tab-btn { height: 34px; padding: 0 0.875rem 0 0.4rem; font-size: 0.52rem; gap: 0.45rem; }
+  .tab-num { width: 22px; height: 22px; font-size: 0.48rem; }
+
+  /* panel: tighter gaps */
+  .tab-panel.active { gap: 1.75rem; padding-top: 2rem; }
+
+  /* panel metrics: 2+1 layout */
+  .panel-metrics { grid-template-columns: 1fr 1fr; }
+  .p-metric:nth-child(2) { border-right: none; }
+  .p-metric:nth-child(3) {
+    grid-column: span 2;
+    border-top: 0.5px solid var(--line);
+    border-right: none;
+  }
+
+  /* panel CTA full width */
+  .panel-cta { flex-direction: column; align-items: stretch; }
+  .btn-live, .btn-live-disabled { justify-content: center; text-align: center; }
+
+  /* sc controls: hide label to save space */
+  .sc-page-label { display: none; }
+
+  /* tab progress bar */
+  .tab-progress {
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    padding-top: 1.75rem;
+    margin-top: 2rem;
+  }
+  .tp-dots { flex-wrap: wrap; }
+
+  /* contact */
+  .contact-inner { gap: 2rem; }
+  .cr-value { word-break: break-word; }
+
+  /* footer */
+  footer { justify-content: center; text-align: center; flex-direction: column; }
+}
+
+/* ============================================================
+   RESPONSIVE — very small  (≤ 380px)
+============================================================ */
+@media (max-width: 380px) {
+  h1.hero-heading { font-size: 2.8rem; }
+  .cert-badge-title { font-size: 0.62rem; }
+  .cert-badge-sub { font-size: 0.5rem; }
+  .tab-btn { height: 32px; padding: 0 0.75rem 0 0.35rem; font-size: 0.48rem; gap: 0.35rem; }
+  .tab-num { width: 20px; height: 20px; font-size: 0.44rem; }
+  .panel-title { font-size: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">DH<span>/</span>Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire me</a>
+</nav>
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-aura"></div>
+  <div class="hero-aura2"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text">Business Intelligence · Jakarta, Indonesia</span>
+    </div>
+
+    <h1 class="hero-heading">
+      Dina <em>Haniyah.</em>
+    </h1>
+
+    <p class="hero-sub">
+      Business Intelligence Analyst &amp; Data Professional — 7+ years across Fintech, Banking, Telecom, and NGO. Building dashboards and analytics systems that help organizations move from noise to clarity.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat stat-plain">
+        <span class="stat-n"><span class="counter" data-target="7">0</span><span class="hi">+</span></span>
+        <span class="stat-l">Years experience</span>
+      </div>
+      <div class="stat stat-cert">
+        <div class="cert-badge-hero">
+          <div class="cert-badge-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div>
+            <div class="cert-badge-title" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Microsoft DP-600</div>
+            <div class="cert-badge-sub">Fabric Analytics Engineer</div>
+          </div>
+        </div>
+      </div>
+      <div class="stat stat-cert">
+        <div class="cert-badge-hero cert-badge-hero--google">
+          <div class="cert-badge-icon cert-badge-icon--google">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div>
+            <div class="cert-badge-title" style="min-width:0;">Google</div>
+            <div class="cert-badge-sub">Data Analytics Certificate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">View my work</a>
+      <a href="#contact" class="btn-ghost">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     WORK — DASHBOARDS
+══════════════════════════════ -->
+<section id="work">
+  <div class="work-intro reveal">
+    <div>
+      <div class="section-eyebrow">
+        <div class="eyebrow-line"></div>
+        <span class="section-num">01 / Work</span>
+      </div>
+      <h2 class="section-heading">Dashboard <em>showcase.</em></h2>
+    </div>
+    <div class="work-intro-right">
+      6 projects · 2020–2024<br>Banking · Fintech · Telecom · NGO
+    </div>
+  </div>
+
+  <!-- TAB BUTTONS -->
+  <div class="tab-list reveal reveal-d1" role="tablist" id="tabList">
+    <button class="tab-btn active" role="tab" data-tab="0" aria-selected="true">
+      <span class="tab-num">01</span>Audit Workload
+    </button>
+    <button class="tab-btn" role="tab" data-tab="1" aria-selected="false">
+      <span class="tab-num">02</span>Customer Insights
+    </button>
+    <button class="tab-btn" role="tab" data-tab="2" aria-selected="false">
+      <span class="tab-num">03</span>Network Monitor
+    </button>
+    <button class="tab-btn" role="tab" data-tab="3" aria-selected="false">
+      <span class="tab-num">04</span>Growth Funnel
+    </button>
+    <button class="tab-btn" role="tab" data-tab="4" aria-selected="false">
+      <span class="tab-num">05</span>Impact Tracker
+    </button>
+    <button class="tab-btn" role="tab" data-tab="5" aria-selected="false">
+      <span class="tab-num">06</span>Product Analytics
+    </button>
+  </div>
+
+  <!-- ════ TAB PANELS ════ -->
+  <div class="tab-panels">
+
+    <!-- ── PANEL 1: Audit Workload ── -->
+    <div class="tab-panel active" role="tabpanel" data-panel="0">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>Banking · BRI · 2024</div>
+        <h3 class="panel-title">Audit Workload Intelligence</h3>
+        <p class="panel-desc">Executive-facing dashboard for an 18-region internal audit function at Bank Rakyat Indonesia. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">18</span><span class="pm-lbl">Regions</span></div>
+          <div class="p-metric"><span class="pm-val">6.3K+</span><span class="pm-lbl">Findings</span></div>
+          <div class="p-metric"><span class="pm-val">4</span><span class="pm-lbl">Report tabs</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Power BI</span>
+          <span class="tool-pill">DAX</span>
+          <span class="tool-pill">Star Schema</span>
+          <span class="tool-pill">Microsoft Fabric</span>
+          <span class="tool-pill">SQL</span>
+        </div>
+        <div class="panel-cta">
+          <span class="btn-live-disabled">
+            <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Internal — not public
+          </span>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <!-- SCREENSHOT CAROUSEL: panel 1 has 4 pages -->
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Audit Workload Intelligence</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="0">
+            <div class="sc-track">
+              <!-- Slide 1 -->
+              <div class="sc-slide">
+                <div class="sc-slide-inner">
+                  <!-- <img src="screenshots/01-audit-p1.png" alt="Executive Overview"> -->
+                  <div class="screenshot-placeholder">
+                    <div class="ph-bars">
+                      <div class="ph-bar" style="height:32%"></div><div class="ph-bar" style="height:58%"></div>
+                      <div class="ph-bar" style="height:44%"></div><div class="ph-bar hi" style="height:89%"></div>
+                      <div class="ph-bar" style="height:66%"></div><div class="ph-bar" style="height:51%"></div>
+                      <div class="ph-bar hi" style="height:93%"></div><div class="ph-bar" style="height:45%"></div>
+                    </div>
+                    <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                    <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Executive Overview</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Slide 2 -->
+              <div class="sc-slide">
+                <div class="sc-slide-inner">
+                  <!-- <img src="screenshots/01-audit-p2.png" alt="Workload Analysis"> -->
+                  <div class="screenshot-placeholder">
+                    <div class="ph-bars">
+                      <div class="ph-bar hi" style="height:78%"></div><div class="ph-bar" style="height:48%"></div>
+                      <div class="ph-bar" style="height:65%"></div><div class="ph-bar" style="height:38%"></div>
+                      <div class="ph-bar hi" style="height:91%"></div><div class="ph-bar" style="height:54%"></div>
+                      <div class="ph-bar" style="height:42%"></div><div class="ph-bar" style="height:72%"></div>
+                    </div>
+                    <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                    <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Workload Analysis</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="sc-slide">
+                <div class="sc-slide-inner">
+                  <!-- <img src="screenshots/01-audit-p3.png" alt="Process Efficiency"> -->
+                  <div class="screenshot-placeholder">
+                    <div class="ph-bars">
+                      <div class="ph-bar" style="height:55%"></div><div class="ph-bar hi" style="height:82%"></div>
+                      <div class="ph-bar" style="height:40%"></div><div class="ph-bar" style="height:70%"></div>
+                      <div class="ph-bar" style="height:35%"></div><div class="ph-bar hi" style="height:88%"></div>
+                      <div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:49%"></div>
+                    </div>
+                    <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                    <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · Process Efficiency</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Slide 4 -->
+              <div class="sc-slide">
+                <div class="sc-slide-inner">
+                  <!-- <img src="screenshots/01-audit-p4.png" alt="Findings Management"> -->
+                  <div class="screenshot-placeholder">
+                    <div class="ph-bars">
+                      <div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:68%"></div>
+                      <div class="ph-bar hi" style="height:96%"></div><div class="ph-bar" style="height:52%"></div>
+                      <div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:85%"></div>
+                      <div class="ph-bar" style="height:61%"></div><div class="ph-bar" style="height:38%"></div>
+                    </div>
+                    <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                    <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 4 · Findings Management</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-0">Page 1 / 4 — Executive Overview</span>
+            <div class="sc-dots" id="sc-dots-0">
+              <button class="sc-dot active" data-sc="0" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="0" data-idx="1" aria-label="Page 2"></button>
+              <button class="sc-dot" data-sc="0" data-idx="2" aria-label="Page 3"></button>
+              <button class="sc-dot" data-sc="0" data-idx="3" aria-label="Page 4"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="0" data-dir="-1" aria-label="Previous page">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="sc-arr" data-sc="0" data-dir="1" aria-label="Next page">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 2: Customer Insights ── -->
+    <div class="tab-panel" role="tabpanel" data-panel="1">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>Fintech · Kredivo · 2023</div>
+        <h3 class="panel-title">Customer Insights &amp; Churn Analysis</h3>
+        <p class="panel-desc">Five-page Power BI report covering customer segmentation, CLV modeling, churn scoring, and sales performance for Kredivo's digital lending platform. Built with 30+ DAX measures for rapid deployment across business units.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">5</span><span class="pm-lbl">Report pages</span></div>
+          <div class="p-metric"><span class="pm-val">30+</span><span class="pm-lbl">DAX measures</span></div>
+          <div class="p-metric"><span class="pm-val">CLV</span><span class="pm-lbl">Model</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Power BI</span>
+          <span class="tool-pill">DAX</span>
+          <span class="tool-pill">Python</span>
+          <span class="tool-pill">SQL</span>
+          <span class="tool-pill">Amplitude</span>
+        </div>
+        <div class="panel-cta">
+          <a href="#" class="btn-live" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            View live dashboard
+          </a>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Customer Insights</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="1">
+            <div class="sc-track">
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <!-- <img src="screenshots/02-customer-p1.png" alt="Overview"> -->
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar hi" style="height:82%"></div><div class="ph-bar" style="height:52%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar" style="height:40%"></div><div class="ph-bar hi" style="height:94%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:76%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Segmentation Overview</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <!-- <img src="screenshots/02-customer-p2.png" alt="Churn Analysis"> -->
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:60%"></div><div class="ph-bar hi" style="height:90%"></div><div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:72%"></div><div class="ph-bar" style="height:38%"></div><div class="ph-bar hi" style="height:86%"></div><div class="ph-bar" style="height:58%"></div><div class="ph-bar" style="height:50%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Churn Analysis</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <!-- <img src="screenshots/02-customer-p3.png" alt="CLV Model"> -->
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:48%"></div><div class="ph-bar" style="height:70%"></div><div class="ph-bar hi" style="height:88%"></div><div class="ph-bar" style="height:55%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:63%"></div><div class="ph-bar" style="height:41%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · CLV Model</div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-1">Page 1 / 3 — Segmentation Overview</span>
+            <div class="sc-dots" id="sc-dots-1">
+              <button class="sc-dot active" data-sc="1" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="1" data-idx="1" aria-label="Page 2"></button>
+              <button class="sc-dot" data-sc="1" data-idx="2" aria-label="Page 3"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="1" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="sc-arr" data-sc="1" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 3: Network Monitor ── -->
+    <div class="tab-panel" role="tabpanel" data-panel="2">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>Telecom · Telkom · 2020</div>
+        <h3 class="panel-title">Network Performance Monitor</h3>
+        <p class="panel-desc">Real-time operational dashboard monitoring network health KPIs, downtime events, and regional performance across Telkom Indonesia's nationwide infrastructure. Enabled ops teams to detect and respond to incidents significantly faster.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">Live</span><span class="pm-lbl">Refresh</span></div>
+          <div class="p-metric"><span class="pm-val">Multi</span><span class="pm-lbl">Region</span></div>
+          <div class="p-metric"><span class="pm-val">KPI</span><span class="pm-lbl">Health</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Tableau</span>
+          <span class="tool-pill">PostgreSQL</span>
+          <span class="tool-pill">SQL</span>
+          <span class="tool-pill">Python</span>
+        </div>
+        <div class="panel-cta">
+          <span class="btn-live-disabled">
+            <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Internal — not public
+          </span>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">public.tableau.com · Network Performance</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="2">
+            <div class="sc-track">
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:92%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:64%"></div><div class="ph-bar" style="height:37%"></div><div class="ph-bar hi" style="height:87%"></div><div class="ph-bar" style="height:59%"></div><div class="ph-bar" style="height:76%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Network Overview</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar hi" style="height:85%"></div><div class="ph-bar" style="height:55%"></div><div class="ph-bar" style="height:72%"></div><div class="ph-bar" style="height:42%"></div><div class="ph-bar hi" style="height:98%"></div><div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:47%"></div><div class="ph-bar" style="height:68%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Regional Breakdown</div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-2">Page 1 / 2 — Network Overview</span>
+            <div class="sc-dots" id="sc-dots-2">
+              <button class="sc-dot active" data-sc="2" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="2" data-idx="1" aria-label="Page 2"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="2" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="sc-arr" data-sc="2" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 4: Growth Funnel ── -->
+    <div class="tab-panel" role="tabpanel" data-panel="3">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>Fintech · Kredivo · 2022</div>
+        <h3 class="panel-title">Growth Funnel Analytics</h3>
+        <p class="panel-desc">Product growth instrumentation and full-funnel analysis for Kredivo's digital lending platform. Tracks activation, engagement, retention, and revenue — delivered weekly to C-Suite to help the product team prioritize growth levers with confidence.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">Weekly</span><span class="pm-lbl">C-suite cadence</span></div>
+          <div class="p-metric"><span class="pm-val">Full</span><span class="pm-lbl">Funnel</span></div>
+          <div class="p-metric"><span class="pm-val">Retention</span><span class="pm-lbl">Model</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Amplitude</span>
+          <span class="tool-pill">Tableau</span>
+          <span class="tool-pill">SQL</span>
+          <span class="tool-pill">Python</span>
+        </div>
+        <div class="panel-cta">
+          <a href="#" class="btn-live" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            View live dashboard
+          </a>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">analytics.amplitude.com · Growth Funnel</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="3">
+            <div class="sc-track">
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar" style="height:82%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar hi" style="height:90%"></div><div class="ph-bar" style="height:62%"></div><div class="ph-bar" style="height:38%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Funnel Overview</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:52%"></div><div class="ph-bar hi" style="height:80%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar hi" style="height:94%"></div><div class="ph-bar" style="height:58%"></div><div class="ph-bar" style="height:36%"></div><div class="ph-bar" style="height:72%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Retention Cohorts</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:66%"></div><div class="ph-bar" style="height:48%"></div><div class="ph-bar hi" style="height:87%"></div><div class="ph-bar" style="height:53%"></div><div class="ph-bar" style="height:75%"></div><div class="ph-bar hi" style="height:99%"></div><div class="ph-bar" style="height:61%"></div><div class="ph-bar" style="height:43%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · Revenue Metrics</div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-3">Page 1 / 3 — Funnel Overview</span>
+            <div class="sc-dots" id="sc-dots-3">
+              <button class="sc-dot active" data-sc="3" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="3" data-idx="1" aria-label="Page 2"></button>
+              <button class="sc-dot" data-sc="3" data-idx="2" aria-label="Page 3"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="3" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="sc-arr" data-sc="3" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 5: Impact Tracker ── -->
+    <div class="tab-panel" role="tabpanel" data-panel="4">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>NGO · WRI · 2021</div>
+        <h3 class="panel-title">Environmental Impact Tracker</h3>
+        <p class="panel-desc">Data pipeline and visualization system for World Resources Institute sustainability metrics. Aggregates field data across multiple regional projects into a unified reporting layer, enabling program managers and donors to track environmental outcomes at a glance.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">Multi</span><span class="pm-lbl">Region data</span></div>
+          <div class="p-metric"><span class="pm-val">ETL</span><span class="pm-lbl">Pipeline</span></div>
+          <div class="p-metric"><span class="pm-val">Exec</span><span class="pm-lbl">Reporting</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Python</span>
+          <span class="tool-pill">Power BI</span>
+          <span class="tool-pill">SQL</span>
+          <span class="tool-pill">dbt</span>
+          <span class="tool-pill">PostgreSQL</span>
+        </div>
+        <div class="panel-cta">
+          <a href="#" class="btn-live" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            View live dashboard
+          </a>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Environmental Impact</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="4">
+            <div class="sc-track">
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:42%"></div><div class="ph-bar" style="height:67%"></div><div class="ph-bar hi" style="height:84%"></div><div class="ph-bar" style="height:53%"></div><div class="ph-bar" style="height:76%"></div><div class="ph-bar hi" style="height:95%"></div><div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:47%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Impact Summary</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:58%"></div><div class="ph-bar hi" style="height:79%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar" style="height:88%"></div><div class="ph-bar hi" style="height:96%"></div><div class="ph-bar" style="height:64%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:72%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Regional Breakdown</div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-4">Page 1 / 2 — Impact Summary</span>
+            <div class="sc-dots" id="sc-dots-4">
+              <button class="sc-dot active" data-sc="4" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="4" data-idx="1" aria-label="Page 2"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="4" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="sc-arr" data-sc="4" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+    <!-- ── PANEL 6: Product Analytics ── -->
+    <div class="tab-panel" role="tabpanel" data-panel="5">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="industry-dot"></span>Banking · BRI · 2024</div>
+        <h3 class="panel-title">Digital Product Performance</h3>
+        <p class="panel-desc">End-to-end product analytics dashboard for BRI's internal digital audit tool. Tracks feature adoption, active user engagement, and product health metrics — serving as the single source of truth for product decision-making across the team.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">Product</span><span class="pm-lbl">Analytics</span></div>
+          <div class="p-metric"><span class="pm-val">Adoption</span><span class="pm-lbl">Tracking</span></div>
+          <div class="p-metric"><span class="pm-val">Health</span><span class="pm-lbl">Score</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools">
+          <span class="tool-pill">Power BI</span>
+          <span class="tool-pill">Microsoft Fabric</span>
+          <span class="tool-pill">DAX</span>
+          <span class="tool-pill">Figma</span>
+          <span class="tool-pill">SQL</span>
+        </div>
+        <div class="panel-cta">
+          <span class="btn-live-disabled">
+            <svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Internal — not public
+          </span>
+        </div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="screenshot-bar">
+            <div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div>
+            <div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Digital Product Performance</span></div>
+          </div>
+          <div class="sc-carousel" data-carousel="5">
+            <div class="sc-track">
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:57%"></div><div class="ph-bar hi" style="height:80%"></div><div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:92%"></div><div class="ph-bar hi" style="height:98%"></div><div class="ph-bar" style="height:65%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:73%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Product Health</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar hi" style="height:88%"></div><div class="ph-bar" style="height:62%"></div><div class="ph-bar" style="height:78%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar hi" style="height:93%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar" style="height:40%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Feature Adoption</div>
+                </div>
+              </div></div>
+              <div class="sc-slide"><div class="sc-slide-inner">
+                <div class="screenshot-placeholder">
+                  <div class="ph-bars"><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:91%"></div><div class="ph-bar" style="height:59%"></div><div class="ph-bar" style="height:82%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:67%"></div></div>
+                  <div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div>
+                  <div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · User Engagement</div>
+                </div>
+              </div></div>
+            </div>
+          </div>
+          <div class="sc-controls">
+            <span class="sc-page-label" id="sc-label-5">Page 1 / 3 — Product Health</span>
+            <div class="sc-dots" id="sc-dots-5">
+              <button class="sc-dot active" data-sc="5" data-idx="0" aria-label="Page 1"></button>
+              <button class="sc-dot" data-sc="5" data-idx="1" aria-label="Page 2"></button>
+              <button class="sc-dot" data-sc="5" data-idx="2" aria-label="Page 3"></button>
+            </div>
+            <div class="sc-arrows">
+              <button class="sc-arr" data-sc="5" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button class="sc-arr" data-sc="5" data-dir="1" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="frame-glow"></div>
+      </div>
+    </div>
+
+  </div><!-- /tab-panels -->
+
+  <!-- TAB PROGRESS -->
+  <div class="tab-progress reveal">
+    <div class="tp-dots" id="tpDots">
+      <button class="tp-dot active" data-tab="0"></button>
+      <button class="tp-dot" data-tab="1"></button>
+      <button class="tp-dot" data-tab="2"></button>
+      <button class="tp-dot" data-tab="3"></button>
+      <button class="tp-dot" data-tab="4"></button>
+      <button class="tp-dot" data-tab="5"></button>
+    </div>
+    <span class="tp-label" id="tpLabel">01 / 06</span>
+    <div class="tp-arrows">
+      <button class="tp-arr" id="prevTab" aria-label="Previous dashboard">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="tp-arr" id="nextTab" aria-label="Next dashboard">
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════
+     CONTACT
+══════════════════════════════ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="section-eyebrow reveal">
+        <div class="eyebrow-line"></div>
+        <span class="section-num">02 / Contact</span>
+      </div>
+      <div class="contact-tagline reveal reveal-d1">Open to new<br><em>opportunities.</em></div>
+      <p class="contact-note reveal reveal-d2">Available for full-time roles, consulting, and freelance. Open to IC, manager, relocation, and global remote work across any industry.</p>
+    </div>
+    <div class="reveal reveal-d2">
+      <div class="contact-links">
+        <a href="mailto:hello@dinahaniyah.com" class="contact-row">
+          <div><div class="cr-label">Email</div><div class="cr-value">hello@dinahaniyah.com</div></div>
+          <span class="cr-arrow">↗</span>
+        </a>
+        <a href="https://linkedin.com/in/dinahaniyah" target="_blank" rel="noopener" class="contact-row">
+          <div><div class="cr-label">LinkedIn</div><div class="cr-value">linkedin.com/in/dinahaniyah</div></div>
+          <span class="cr-arrow">↗</span>
+        </a>
+        <a href="assets/cv-dina-haniyah.pdf" download class="contact-row">
+          <div><div class="cr-label">Résumé</div><div class="cr-value">Download CV (PDF)</div></div>
+          <span class="cr-arrow">↓</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-l">© 2024 Dina Haniyah · Jakarta, Indonesia</span>
+  <span class="footer-r">BI Analyst · DP-600 · Universitas Gadjah Mada</span>
+</footer>
+
+<!-- ══════════════════════════════
+     JAVASCRIPT
+══════════════════════════════ -->
+<script>
+/* ── Cursor ── */
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+if (window.matchMedia('(hover: hover)').matches) {
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+  (function tick(){
+    if(dot){ dot.style.left=mx+'px'; dot.style.top=my+'px'; }
+    rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1;
+    if(ring){ ring.style.left=rx+'px'; ring.style.top=ry+'px'; }
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a,button,[role="tab"]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ if(ring){ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='rgba(93,202,165,0.6)';} });
+    el.addEventListener('mouseleave',()=>{ if(ring){ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(93,202,165,0.35)';} });
+  });
+}
+
+/* ── Nav scroll ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+},{passive:true});
+
+/* ── Reveal ── */
+const revObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ── Counter ── */
+function animCount(el, target, dur=1400){
+  const start = performance.now();
+  (function step(now){
+    const p = Math.min((now-start)/dur, 1);
+    el.textContent = Math.floor((1-Math.pow(1-p,3))*target);
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent = target;
+  })(start);
+}
+const cntObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animCount(e.target,+e.target.dataset.target); cntObs.unobserve(e.target); } });
+},{threshold:0.5});
+document.querySelectorAll('.counter').forEach(el=>cntObs.observe(el));
+
+/* ── Dashboard tabs ── */
+const tabBtns   = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+const tpDots    = document.querySelectorAll('.tp-dot');
+const tpLabel   = document.getElementById('tpLabel');
+const TOTAL     = tabBtns.length;
+let currentTab  = 0;
+
+function goToTab(idx) {
+  idx = ((idx % TOTAL) + TOTAL) % TOTAL;
+  tabBtns[currentTab].classList.remove('active');
+  tabBtns[currentTab].setAttribute('aria-selected','false');
+  tabPanels[currentTab].classList.remove('active');
+  tpDots[currentTab].classList.remove('active');
+  currentTab = idx;
+  tabBtns[idx].classList.add('active');
+  tabBtns[idx].setAttribute('aria-selected','true');
+  tabPanels[idx].classList.add('active');
+  tpDots[idx].classList.add('active');
+  tpLabel.textContent = String(idx+1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+  tabBtns[idx].scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+}
+
+tabBtns.forEach((btn,i) => btn.addEventListener('click', () => goToTab(i)));
+tpDots.forEach((d,i) => d.addEventListener('click', () => goToTab(i)));
+document.getElementById('prevTab').addEventListener('click', () => goToTab(currentTab-1));
+document.getElementById('nextTab').addEventListener('click', () => goToTab(currentTab+1));
+
+/* ── Screenshot carousels ── */
+// Page labels for each carousel [carousel_id]: [page label strings]
+const scLabels = {
+  0: ['Page 1 / 4 — Executive Overview','Page 2 / 4 — Workload Analysis','Page 3 / 4 — Process Efficiency','Page 4 / 4 — Findings Management'],
+  1: ['Page 1 / 3 — Segmentation Overview','Page 2 / 3 — Churn Analysis','Page 3 / 3 — CLV Model'],
+  2: ['Page 1 / 2 — Network Overview','Page 2 / 2 — Regional Breakdown'],
+  3: ['Page 1 / 3 — Funnel Overview','Page 2 / 3 — Retention Cohorts','Page 3 / 3 — Revenue Metrics'],
+  4: ['Page 1 / 2 — Impact Summary','Page 2 / 2 — Regional Breakdown'],
+  5: ['Page 1 / 3 — Product Health','Page 2 / 3 — Feature Adoption','Page 3 / 3 — User Engagement'],
+};
+
+// Track current slide per carousel
+const scCurrent = {0:0, 1:0, 2:0, 3:0, 4:0, 5:0};
+
+function goToSlide(scId, idx) {
+  const carousel = document.querySelector(`.sc-carousel[data-carousel="${scId}"]`);
+  if (!carousel) return;
+  const track = carousel.querySelector('.sc-track');
+  const slides = carousel.querySelectorAll('.sc-slide');
+  const total = slides.length;
+  idx = ((idx % total) + total) % total;
+  scCurrent[scId] = idx;
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  // update dots
+  const dots = document.querySelectorAll(`.sc-dot[data-sc="${scId}"]`);
+  dots.forEach((d,i) => d.classList.toggle('active', i===idx));
+  // update label
+  const labelEl = document.getElementById(`sc-label-${scId}`);
+  if (labelEl && scLabels[scId]) labelEl.textContent = scLabels[scId][idx] || '';
+}
+
+// Arrow buttons
+document.querySelectorAll('.sc-arr').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const scId = +btn.dataset.sc;
+    const dir  = +btn.dataset.dir;
+    goToSlide(scId, scCurrent[scId] + dir);
+  });
+});
+
+// Dot buttons
+document.querySelectorAll('.sc-dot').forEach(dot => {
+  dot.addEventListener('click', e => {
+    e.stopPropagation();
+    const scId = +dot.dataset.sc;
+    const idx  = +dot.dataset.idx;
+    goToSlide(scId, idx);
+  });
+});
+
+// Touch swipe support for screenshot carousels
+document.querySelectorAll('.sc-carousel').forEach(carousel => {
+  let startX = 0, isDragging = false;
+  const scId = +carousel.dataset.carousel;
+  carousel.addEventListener('touchstart', e => { startX = e.touches[0].clientX; isDragging = true; }, {passive:true});
+  carousel.addEventListener('touchend', e => {
+    if (!isDragging) return;
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goToSlide(scId, scCurrent[scId] + (diff > 0 ? 1 : -1));
+    isDragging = false;
+  }, {passive:true});
+  // Mouse drag on desktop
+  let mStartX = 0, mDragging = false;
+  carousel.addEventListener('mousedown', e => { mStartX = e.clientX; mDragging = true; });
+  carousel.addEventListener('mouseup', e => {
+    if (!mDragging) return;
+    const diff = mStartX - e.clientX;
+    if (Math.abs(diff) > 40) goToSlide(scId, scCurrent[scId] + (diff > 0 ? 1 : -1));
+    mDragging = false;
+  });
+  carousel.addEventListener('mouseleave', () => { mDragging = false; });
+});
+
+/* ── Keyboard: left/right tabs only when NOT inside a carousel ── */
+document.addEventListener('keydown', e => {
+  // Only fire if work section is visible
+  const workEl = document.getElementById('work');
+  const r = workEl.getBoundingClientRect();
+  if (r.top >= window.innerHeight || r.bottom <= 0) return;
+  if (e.key === 'ArrowRight') goToTab(currentTab + 1);
+  if (e.key === 'ArrowLeft')  goToTab(currentTab - 1);
+});
+</script>
+</body>
+</html>
