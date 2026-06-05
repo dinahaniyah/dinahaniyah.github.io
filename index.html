@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dina Haniyah — BI Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --orange:      #E8420A;
+  --orange-l:    #F5622A;
+  --orange-dim:  #B53208;
+  --orange-bg:   rgba(232,66,10,0.06);
+  --orange-line: rgba(232,66,10,0.2);
+  --ink:         #141210;
+  --ink-2:       #2C2A28;
+  --ink-3:       #4A4845;
+  --muted:       #7A7774;
+  --muted-l:     #A8A5A2;
+  --rule:        #D8D4CE;
+  --rule-l:      #EAE7E2;
+  --paper:       #FFFDF8;
+  --paper-2:     #FAF7F2;
+  --paper-3:     #F2EFE8;
+  --serif:       'Playfair Display', Georgia, serif;
+  --mono:        'JetBrains Mono', monospace;
+  --sans:        'DM Sans', sans-serif;
+  --nav-h:       56px;
+  --ease:        cubic-bezier(0.16,1,0.3,1);
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--sans);
+  background: #F5F0E6;
+  color: #141210;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+html, body { max-width: 100%; overflow-x: hidden; }
+img, video { max-width: 100%; }
+
+/* ============================================================
+   CURSOR
+============================================================ */
+.cursor-dot {
+  position: fixed; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange); pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.cursor-ring {
+  position: fixed; width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid rgba(232,66,10,0.4); pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  opacity: 0;
+  transition: width 0.22s var(--ease), height 0.22s var(--ease), border-color 0.22s, opacity 0.3s;
+}
+@media (hover:none) { .cursor-dot, .cursor-ring { display:none!important; } body { cursor:auto; } }
+@media (hover:hover) { a, button, [role="tab"] { cursor:none; } }
+
+/* ============================================================
+   SCROLLBAR
+============================================================ */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 99px; }
+
+/* ============================================================
+   ACCENT TOP BAR
+============================================================ */
+.accent-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ink) 0%, var(--orange) 40%, #F5A623 100%);
+}
+
+/* ============================================================
+   NAV
+============================================================ */
+nav {
+  position: fixed; top: 3px; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(1.25rem,4vw,3.5rem);
+  background: #FFFDF8;
+  border-bottom: 1px solid #D8D4CE;
+  border-bottom: 1px solid var(--rule);
+  transition: box-shadow 0.3s; /* ensure solid on scroll */
+}
+nav.scrolled { box-shadow: 0 2px 24px rgba(20,18,16,0.1); background: rgba(255,253,248,0.98); }
+.nav-logo {
+  font-family: var(--serif); font-size: 1.05rem;
+  font-weight: 700; letter-spacing: 0.02em; color: var(--ink);
+  text-decoration: none;
+}
+.nav-logo span { color: var(--orange); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: var(--mono); font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-2); text-decoration: none;
+  transition: color 0.2s; position: relative; padding-bottom: 2px;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  height: 1.5px; width: 0; background: var(--orange);
+  transition: width 0.3s var(--ease);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta {
+  font-family: var(--mono); font-size: 0.62rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--ink); color: var(--paper);
+  padding: 0.5rem 1.25rem; border-radius: 2px;
+  text-decoration: none; white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+.nav-cta:hover { background: var(--orange); transform: translateY(-1px); }
+@media (max-width:640px) { .nav-links { display:none; } }
+
+/* ============================================================
+   HERO — Style N: graph paper + name + prominent badges
+============================================================ */
+#hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #D8D4CE;
+  background: #F5F0E6;
+  padding-top: calc(var(--nav-h) + 3px + 3rem);
+}
+
+/* graph paper grid */
+.hero-grid-bg {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(20,18,16,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,18,16,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* main content block — sits at bottom */
+.hero-main {
+  position: relative; z-index: 1;
+  padding: 0 clamp(1.25rem,4vw,3.5rem) 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-bottom: 0;
+  opacity: 0;
+  animation: fade-up 0.9s var(--ease) 0.1s forwards;
+}
+
+/* kicker */
+.hero-eyebrow {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 0;
+}
+
+/* kicker — now used as eyebrow only */
+.hero-kicker {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.kicker-rule { flex: 0 0 24px; height: 2px; background: var(--orange); }
+.kicker-text {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.18em; text-transform: uppercase; color: #2C2A28;
+}
+
+/* big bold title line */
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 400;
+  color: #141210;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+.hero-title strong {
+  font-weight: 900;
+  color: #141210;
+}
+
+
+/* years inline — bold orange number + label */
+/* hero-years pill removed — years inline in kicker */
+
+/* name + badges row */
+.hero-name-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* big heading */
+h1.hero-heading {
+  font-family: var(--serif);
+  font-size: clamp(4rem, 11vw, 9rem);
+  font-weight: 900; line-height: 0.88;
+  color: #141210;
+  letter-spacing: -0.025em;
+  flex-shrink: 0;
+}
+h1.hero-heading em {
+  font-weight: 400; font-style: italic; color: var(--orange);
+}
+
+/* badges group */
+.hero-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  flex-wrap: wrap;
+  padding-bottom: 0;
+}
+
+/* base badge — fixed height so all equal */
+.hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 64px;
+  padding: 0 1rem;
+  border-radius: 3px;
+  border: 1.5px solid #141210;
+  background: #FFFDF8;
+  box-shadow: 3px 3px 0 #141210;
+  transition: transform 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.hero-badge:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #141210; }
+
+/* year badge removed — years shown inline in title block */
+
+/* cert badge — orange */
+.hero-badge--cert {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 3px 3px 0 #141210;
+}
+.hero-badge--cert:hover { box-shadow: 4px 4px 0 #141210; }
+
+/* google badge — ink */
+.hero-badge--google {
+  background: #141210;
+  border-color: #141210;
+  box-shadow: 3px 3px 0 var(--orange);
+}
+.hero-badge--google:hover { box-shadow: 4px 4px 0 var(--orange); }
+
+/* badge icon */
+.badge-icon {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+}
+.badge-icon svg { width: 14px; height: 14px; stroke: #fff; }
+.badge-icon--g { background: rgba(255,255,255,0.12); }
+
+/* badge text */
+.badge-text { min-width: 0; }
+.badge-title {
+  font-family: var(--mono); font-size: 0.64rem; font-weight: 500;
+  color: #fff; display: block;
+  white-space: nowrap; letter-spacing: 0.03em;
+}
+.badge-sub {
+  font-family: var(--mono); font-size: 0.5rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.6); margin-top: 0.15rem; display: block;
+}
+
+/* bio text — sits between name and rule */
+.hero-sub {
+  font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+  color: #2C2A28; line-height: 1.8; font-weight: 300;
+  max-width: 680px;
+  margin-top: 1.5rem;
+}
+.hero-sub strong {
+  font-weight: 700;
+  color: #141210;
+  background: rgba(232,66,10,0.12);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+/* rule wrapper — adds side padding so rule isn't edge-to-edge */
+.hero-rule-wrap {
+  position: relative; z-index: 1;
+  padding: 0 clamp(1.25rem,4vw,3.5rem);
+  flex-shrink: 0;
+  opacity: 0;
+  animation: fade-in 0.5s var(--ease) 0.55s forwards;
+}
+.hero-rule {
+  height: 3px;
+  background: #141210;
+  width: 100%;
+}
+
+/* bottom strip — buttons with strong styling */
+.hero-bottom {
+  position: relative; z-index: 1;
+  padding: 1.25rem clamp(1.25rem,4vw,3.5rem);
+  background: #EDE8DC;
+  border-top: 0.5px solid #D8D4CE;
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease) 0.65s forwards;
+}
+.hero-actions {
+  display: flex; gap: 0.875rem; flex-wrap: wrap;
+}
+
+/* hero CTA buttons — strong, clearly styled */
+.btn-hero-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #141210; color: #F5F0E6;
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.875rem 2rem;
+  border: 2px solid #141210;
+  border-radius: 2px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 var(--orange);
+  transition: background 0.2s, color 0.2s, box-shadow 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+.btn-hero-primary:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 3px 3px 0 #141210;
+  transform: translate(-1px,-1px);
+}
+
+.btn-hero-ghost {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: #141210;
+  font-family: var(--mono); font-size: 0.7rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 0.875rem 2rem;
+  border: 2px solid #141210;
+  border-radius: 2px;
+  text-decoration: none;
+  box-shadow: 3px 3px 0 #D8D4CE;
+  transition: background 0.2s, color 0.2s, box-shadow 0.15s, transform 0.15s;
+  white-space: nowrap;
+}
+.btn-hero-ghost:hover {
+  background: #141210;
+  color: #F5F0E6;
+  box-shadow: 3px 3px 0 var(--orange);
+  transform: translate(-1px,-1px);
+}
+
+.hero-footer {
+  flex-shrink: 0; /* never compress — always stays at bottom */
+}
+
+/* scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  opacity: 0; animation: fade-up 0.8s var(--ease) 0.9s forwards;
+  pointer-events: none; z-index: 2;
+}
+.scroll-hint span {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: #A8A5A2;
+}
+.scroll-line {
+  width: 1px; height: 36px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+  animation: scroll-drop 2.2s ease-in-out 1.2s infinite;
+}
+@keyframes scroll-drop {
+  0%   { transform: scaleY(0); transform-origin: top;    opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top;    opacity: 1; }
+  100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+}
+
+/* ============================================================
+   WORK
+============================================================ */
+#work {
+  padding: 6rem clamp(1.25rem,4vw,3.5rem) 6rem;
+  background: #FFFDF8;
+  border-bottom: 1px solid #D8D4CE;
+}
+.work-intro {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: 1.5rem; flex-wrap: wrap; margin-bottom: 0;
+}
+.work-meta {
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted-l); text-align: right; line-height: 1.8;
+}
+
+/* ── tabs ── */
+.tab-list {
+  display: flex; gap: 0.4rem;
+  padding: 1.75rem 0 0;
+  border-bottom: 2px solid var(--ink);
+  overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  flex-wrap: wrap; padding-bottom: 0;
+}
+.tab-list::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex-shrink: 0; background: #F0ECE4;
+  border: 1.5px solid var(--rule); border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  height: 40px; padding: 0 1rem 0 0.45rem;
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); position: relative; top: 2px;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.tab-btn:hover { color: var(--ink); background: var(--paper-2); border-color: var(--rule); }
+.tab-btn.active {
+  background: #FFFDF8; color: #141210;
+  border-color: var(--ink); border-bottom-color: var(--paper);
+  font-weight: 500;
+}
+.tab-btn.active::after {
+  content: ''; position: absolute; top: -1px; left: -1px; right: -1px;
+  height: 2px; background: var(--orange);
+}
+/* number bubble */
+.tab-num {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.5rem; font-weight: 500; letter-spacing: 0;
+  background: rgba(20,18,16,0.07); color: var(--muted);
+  transition: background 0.2s, color 0.2s;
+}
+.tab-btn:hover .tab-num { background: rgba(20,18,16,0.1); color: var(--ink); }
+.tab-btn.active .tab-num { background: var(--orange); color: #fff; }
+
+/* ── tab panels ── */
+.tab-panels { position: relative; }
+.tab-panel { display: none; }
+.tab-panel.active {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: clamp(2rem,5vw,5rem);
+  align-items: start;
+  padding-top: 3.5rem;
+  animation: panel-in 0.4s var(--ease) forwards;
+}
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* panel left */
+.panel-content { min-width: 0; }
+.panel-industry {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--orange); background: var(--orange-bg);
+  border: 1px solid var(--orange-line);
+  padding: 0.25rem 0.7rem; border-radius: 2px; margin-bottom: 1.25rem;
+}
+.ind-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+.panel-title {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem,3vw,2.6rem);
+  font-weight: 700; color: var(--ink); line-height: 1.05; margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+.panel-rule { height: 2px; background: var(--rule); margin-bottom: 1rem; }
+.panel-desc {
+  font-size: clamp(0.85rem,1.5vw,0.95rem); color: var(--ink-3);
+  line-height: 1.75; font-weight: 300; margin-bottom: 1.75rem;
+}
+
+/* metrics */
+.panel-metrics {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 1.5px solid var(--ink); border-radius: 3px;
+  overflow: hidden; margin-bottom: 1.75rem;
+}
+.p-metric {
+  padding: 0.875rem 1rem;
+  border-right: 1px solid var(--rule);
+  background: #F5F0E6; position: relative;
+}
+.p-metric:last-child { border-right: none; }
+.p-metric::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--orange); opacity: 0; transition: opacity 0.25s; }
+.p-metric:hover::after { opacity: 1; }
+.pm-val {
+  font-family: var(--serif); font-size: clamp(1.3rem,2.5vw,1.7rem);
+  font-weight: 700; color: var(--orange); display: block; line-height: 1; margin-bottom: 0.2rem;
+}
+.pm-lbl { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-l); }
+
+/* tools */
+.panel-tools-label {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-l); margin-bottom: 0.6rem;
+}
+.panel-tools { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 2rem; }
+.tool-pill {
+  font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); border: 1px solid var(--rule);
+  padding: 0.28rem 0.7rem; border-radius: 2px; background: var(--paper-2);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.tool-pill:hover { color: var(--orange); border-color: var(--orange-line); background: var(--orange-bg); }
+
+/* cta */
+.panel-cta { display: flex; align-items: center; gap: 0.875rem; flex-wrap: wrap; }
+.btn-live {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--orange); color: #fff;
+  padding: 0.7rem 1.5rem; border-radius: 2px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; white-space: nowrap; border: 1.5px solid var(--orange);
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-live:hover { background: var(--orange-dim); transform: translateY(-1px); }
+.btn-live svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-live-disabled {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--muted-l); padding: 0.7rem 1.5rem; border-radius: 2px;
+  font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid var(--rule); white-space: nowrap; background: var(--paper-2);
+}
+
+/* ── screenshot frame ── */
+.panel-visual { position: relative; min-width: 0; }
+.screenshot-frame {
+  background: #EDE8DC; border: 1.5px solid #141210;
+  border-radius: 4px; overflow: hidden;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.screenshot-frame:hover { box-shadow: 6px 6px 0 var(--orange); transform: translate(-1px,-1px); }
+.sbar {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.6rem 0.875rem;
+  background: #F0ECE4; border-bottom: 1px solid #D8D4CE;
+}
+.sbar-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rule); }
+.sbar-dot:first-child { background: var(--orange); }
+.sbar-url {
+  flex: 1; height: 18px; background: var(--paper-2);
+  border: 1px solid var(--rule); border-radius: 3px;
+  margin: 0 0.5rem; display: flex; align-items: center; padding: 0 0.5rem; overflow: hidden;
+}
+.sbar-url-text { font-family: var(--mono); font-size: 0.48rem; color: var(--muted-l); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* inner carousel */
+.sc-carousel { position: relative; overflow: hidden; }
+.sc-track { display: flex; transition: transform 0.45s var(--ease); will-change: transform; }
+.sc-slide { flex-shrink: 0; width: 100%; }
+.sc-slide-inner { width: 100%; aspect-ratio: 16/10; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.sc-slide-inner img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; transition: transform 5s ease; user-select: none; pointer-events: none; -webkit-user-drag: none; }
+.screenshot-frame:hover .sc-slide-inner img { transform: translateY(-10%); }
+
+/* placeholder */
+.screenshot-placeholder {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1rem;
+  background: var(--paper-3); padding: 1.5rem;
+}
+.ph-bars { display: flex; align-items: flex-end; gap: 4px; height: 56px; }
+.ph-bar { width: 8px; background: var(--rule); border-radius: 1px 1px 0 0; }
+.ph-bar.hi { background: var(--orange); }
+.ph-lines { display: flex; flex-direction: column; gap: 5px; width: 120px; }
+.ph-line { height: 2px; background: var(--rule); border-radius: 99px; }
+.ph-line.short { width: 60%; }
+.upload-hint {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--orange); border: 1px dashed var(--orange-line);
+  padding: 0.4rem 0.875rem; border-radius: 2px; opacity: 0.7;
+}
+.upload-hint svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1.5; flex-shrink: 0; }
+
+/* carousel controls */
+.sc-controls {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.6rem 0.875rem;
+  background: #F0ECE4; border-top: 1px solid #D8D4CE;
+}
+.sc-page-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-l); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-dots { display: flex; gap: 0.3rem; align-items: center; }
+.sc-dot { width: 14px; height: 2px; border-radius: 99px; background: var(--rule); border: none; padding: 0; cursor: pointer; transition: background 0.25s, width 0.25s; }
+.sc-dot.active { background: var(--orange); width: 22px; }
+.sc-arrows { display: flex; gap: 0.35rem; }
+.sc-arr { width: 26px; height: 26px; border: 1px solid var(--rule); background: var(--paper-2); border-radius: 2px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color 0.2s, background 0.2s; }
+.sc-arr:hover { border-color: var(--orange); background: var(--orange-bg); }
+.sc-arr svg { width: 10px; height: 10px; stroke: var(--muted); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sc-arr:hover svg { stroke: var(--orange); }
+
+/* tab progress */
+.tab-progress {
+  display: flex; align-items: center; gap: 1rem; justify-content: space-between;
+  flex-wrap: wrap; padding-top: 2.5rem; margin-top: 3.5rem;
+  border-top: 2px solid var(--ink);
+}
+.tp-dots { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.tp-dot { width: 18px; height: 2px; border-radius: 99px; background: var(--rule); border: none; padding: 0; cursor: pointer; transition: background 0.3s, width 0.3s; }
+.tp-dot.active { background: var(--orange); width: 30px; }
+.tp-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.14em; color: var(--muted-l); }
+.tp-arrows { display: flex; gap: 0.5rem; }
+.tp-arr { width: 36px; height: 36px; border: 1.5px solid var(--ink); background: none; border-radius: 2px; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s; }
+.tp-arr:hover { background: var(--ink); }
+.tp-arr svg { width: 13px; height: 13px; stroke: var(--ink); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tp-arr:hover svg { stroke: var(--paper); }
+
+/* ============================================================
+   CONTACT
+============================================================ */
+#contact {
+  padding: 7rem clamp(1.25rem,4vw,3.5rem);
+  background: #EDE8DC;
+  border-top: 1px solid var(--rule);
+}
+.contact-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem,6vw,6rem); align-items: center;
+}
+.contact-tagline {
+  font-family: var(--serif); font-size: clamp(2rem,4vw,3.5rem);
+  font-weight: 900; color: var(--ink); line-height: 0.95;
+  letter-spacing: -0.02em; margin: 1.25rem 0 0.5rem;
+}
+.contact-tagline em { font-weight: 400; font-style: italic; color: var(--orange); }
+.contact-rule { height: 2px; background: var(--ink); margin-bottom: 1rem; }
+.contact-note { font-size: clamp(0.85rem,1.5vw,0.9rem); color: var(--ink-3); line-height: 1.75; font-weight: 300; }
+.contact-links { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; border: 1.5px solid var(--ink); border-radius: 3px; overflow: hidden; }
+.contact-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.25rem; text-decoration: none; background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  background: #F5F0E6; transition: background 0.2s; position: relative; overflow: hidden;
+}
+.contact-row:last-child { border-bottom: none; }
+.contact-row::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--orange); transition: width 0.25s var(--ease); }
+.contact-row:hover { background: #EDE8DC; }
+.contact-row:hover::before { width: 3px; }
+.cr-label { font-family: var(--mono); font-size: 0.55rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-l); margin-bottom: 3px; }
+.cr-value { font-size: clamp(0.8rem,1.5vw,0.9rem); color: var(--ink); word-break: break-word; overflow-wrap: anywhere; font-weight: 400; }
+.cr-arrow { color: var(--muted-l); font-size: 1rem; transition: transform 0.25s, color 0.25s; flex-shrink: 0; margin-left: 0.5rem; }
+.contact-row:hover .cr-arrow { transform: translate(3px,-3px); color: var(--orange); }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+  padding: 1.25rem clamp(1.25rem,4vw,3.5rem);
+  border-top: 2px solid var(--ink);
+  background: var(--ink); color: var(--paper);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 0.5rem;
+}
+.footer-l { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.08em; color: rgba(255,253,248,0.4); }
+.footer-r { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; color: var(--orange); font-style: italic; }
+
+/* ============================================================
+   ANIMATIONS
+============================================================ */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ============================================================
+   RESPONSIVE — tablet ≤960px
+============================================================ */
+@media (max-width:960px) {
+  .hero-name-row { gap:1.25rem; } /* still row on tablet, just tighter gap */
+  .tab-panel.active { grid-template-columns:1fr; gap:2rem; padding-top:2.5rem; }
+  .panel-visual { order:-1; }
+  .work-meta { text-align:left; }
+}
+
+/* ============================================================
+   RESPONSIVE — tablet ≤768px
+============================================================ */
+@media (max-width:768px) {
+  .hero-name-row { flex-direction:column; align-items:flex-start; gap:1rem; }
+  .hero-badges { align-items:stretch; }
+  .contact-inner { grid-template-columns:1fr; gap:2.5rem; }
+}
+
+/* ============================================================
+   RESPONSIVE — mobile ≤560px
+============================================================ */
+@media (max-width:560px) {
+  .hero-main { padding:0 1.25rem 0.875rem; gap:0.6rem; }
+  .kicker-text { font-size:0.54rem; letter-spacing:0.12em; }
+  .hero-title { font-size:clamp(1.1rem,4.5vw,1.6rem); }
+  h1.hero-heading { font-size:clamp(3rem,13vw,5rem); }
+  .hero-badges { flex-direction:column; flex-wrap:nowrap; overflow-x:visible; gap:0.375rem; padding-bottom:0; width:100%; }
+  .hero-badge { height:52px; padding:0 0.875rem; width:100%; flex-shrink:0; }
+
+  .badge-big { font-size:1.5rem; }
+  .badge-title { font-size:0.56rem; }
+  .badge-sub { font-size:0.44rem; }
+  .badge-icon { width:22px; height:22px; }
+  .badge-icon svg { width:11px; height:11px; }
+  .hero-sub { font-size:0.875rem; max-width:100%; }
+  .hero-rule-wrap { padding:0 1.25rem; }
+  .hero-bottom { padding:1rem 1.25rem; }
+  .hero-actions { flex-direction:row; flex-wrap:wrap; gap:0.5rem; }
+  .btn-hero-primary, .btn-hero-ghost { flex:1; min-width:0; text-align:center; justify-content:center; padding:0.875rem 0.75rem; font-size:0.62rem; }
+  .scroll-hint { display:none; }
+  #work { padding-top:3.5rem; padding-bottom:4rem; }
+  .work-intro { margin-bottom:0; gap:0.5rem; }
+  .work-meta { display:none; }
+  .tab-list { gap:0.3rem; padding-bottom:1.25rem; }
+  .tab-btn { height:34px; padding:0 0.75rem 0 0.35rem; font-size:0.52rem; gap:0.4rem; }
+  .tab-num { width:19px; height:19px; font-size:0.46rem; }
+  .tab-panel.active { gap:1.5rem; padding-top:1.75rem; }
+  .panel-title { font-size:clamp(1.4rem,5vw,1.8rem); }
+  .panel-desc { font-size:0.875rem; }
+  .panel-metrics { grid-template-columns:1fr 1fr; }
+  .p-metric:nth-child(2) { border-right:none; }
+  .p-metric:nth-child(3) { grid-column:span 2; border-top:1px solid #D8D4CE; border-right:none; }
+  .panel-cta { flex-direction:column; align-items:stretch; }
+  .btn-live, .btn-live-disabled { justify-content:center; text-align:center; }
+  .sc-page-label { display:none; }
+  .tab-progress { padding-top:1.5rem; margin-top:2rem; flex-wrap:wrap; }
+  .contact-inner { gap:2rem; }
+  .contact-tagline { font-size:clamp(2rem,8vw,2.6rem); }
+  footer { flex-direction:column; justify-content:center; text-align:center; }
+}
+
+/* ============================================================
+   RESPONSIVE — very small ≤380px
+============================================================ */
+@media (max-width:380px) {
+  h1.hero-heading { font-size:2.8rem; }
+  .kicker-text { font-size:0.48rem; }
+  .hero-sub { font-size:0.82rem; }
+  .hero-badge { height:46px; }
+  .badge-title { font-size:0.5rem; }
+  .tab-btn { height:30px; padding:0 0.65rem 0 0.3rem; font-size:0.48rem; }
+  .tab-num { width:17px; height:17px; font-size:0.42rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="accent-bar"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Dina<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Hire me</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+
+  <!-- main content block -->
+  <div class="hero-main">
+
+    <!-- eyebrow kicker -->
+    <div class="hero-eyebrow">
+      <div class="kicker-rule"></div>
+      <span class="kicker-text">Business Intelligence · Jakarta, Indonesia</span>
+    </div>
+
+    <!-- name + cert badges side by side -->
+    <div class="hero-name-row">
+      <h1 class="hero-heading">Dina<br><em>Haniyah.</em></h1>
+      <div class="hero-badges">
+        <div class="hero-badge hero-badge--cert">
+          <div class="badge-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+          </div>
+          <div class="badge-text">
+            <span class="badge-title">Microsoft DP-600</span>
+            <span class="badge-sub">Fabric Analytics Engineer</span>
+          </div>
+        </div>
+        <div class="hero-badge hero-badge--google">
+          <div class="badge-icon badge-icon--g">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="badge-text">
+            <span class="badge-title">Google</span>
+            <span class="badge-sub">Data Analytics Cert</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- one clean paragraph -->
+    <p class="hero-sub">
+      <strong>Senior Business Intelligence &amp; Data Analytics Professional</strong> with <strong>7+ years experience</strong> — building dashboards and analytics systems that move organizations from noise to clarity, across Fintech, Banking, Telecom, and NGO.
+    </p>
+  </div>
+
+  <!-- footer: rule + buttons glued together at bottom -->
+  <div class="hero-footer">
+    <div class="hero-rule-wrap">
+      <div class="hero-rule"></div>
+    </div>
+    <div class="hero-bottom">
+      <div class="hero-actions">
+        <a href="#work" class="btn-hero-primary">View my work</a>
+        <a href="#contact" class="btn-hero-ghost">Get in touch</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+<!-- ══ WORK ══ -->
+<section id="work">
+  <div class="work-intro reveal">
+    <div>
+      <div class="sec-kicker"><div class="kicker-rule"></div><span class="kicker-num">01 / Work</span></div>
+      <h2 class="sec-heading">Dashboard<br><em>showcase.</em></h2>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="work-meta">6 projects · 2020–2024<br>Banking · Fintech · Telecom · NGO</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-list reveal" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="0" aria-selected="true"><span class="tab-num">01</span>Audit Workload</button>
+    <button class="tab-btn" role="tab" data-tab="1" aria-selected="false"><span class="tab-num">02</span>Customer Insights</button>
+    <button class="tab-btn" role="tab" data-tab="2" aria-selected="false"><span class="tab-num">03</span>Network Monitor</button>
+    <button class="tab-btn" role="tab" data-tab="3" aria-selected="false"><span class="tab-num">04</span>Growth Funnel</button>
+    <button class="tab-btn" role="tab" data-tab="4" aria-selected="false"><span class="tab-num">05</span>Impact Tracker</button>
+    <button class="tab-btn" role="tab" data-tab="5" aria-selected="false"><span class="tab-num">06</span>Product Analytics</button>
+  </div>
+
+  <div class="tab-panels">
+
+    <!-- PANEL 1 -->
+    <div class="tab-panel active" data-panel="0">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>Banking · BRI · 2024</div>
+        <h3 class="panel-title">Audit Workload Intelligence</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">Executive-facing dashboard for an 18-region internal audit function at Bank Rakyat Indonesia. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.</p>
+        <div class="panel-metrics">
+          <div class="p-metric"><span class="pm-val">18</span><span class="pm-lbl">Regions</span></div>
+          <div class="p-metric"><span class="pm-val">6.3K+</span><span class="pm-lbl">Findings</span></div>
+          <div class="p-metric"><span class="pm-val">4</span><span class="pm-lbl">Report tabs</span></div>
+        </div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Power BI</span><span class="tool-pill">DAX</span><span class="tool-pill">Star Schema</span><span class="tool-pill">Microsoft Fabric</span><span class="tool-pill">SQL</span></div>
+        <div class="panel-cta"><span class="btn-live-disabled"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Internal — not public</span></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Audit Workload Intelligence</span></div></div>
+          <div class="sc-carousel" data-carousel="0"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:32%"></div><div class="ph-bar" style="height:58%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar hi" style="height:89%"></div><div class="ph-bar" style="height:66%"></div><div class="ph-bar" style="height:51%"></div><div class="ph-bar hi" style="height:93%"></div><div class="ph-bar" style="height:45%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Executive Overview</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar hi" style="height:78%"></div><div class="ph-bar" style="height:48%"></div><div class="ph-bar" style="height:65%"></div><div class="ph-bar" style="height:38%"></div><div class="ph-bar hi" style="height:91%"></div><div class="ph-bar" style="height:54%"></div><div class="ph-bar" style="height:42%"></div><div class="ph-bar" style="height:72%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Workload Analysis</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:55%"></div><div class="ph-bar hi" style="height:82%"></div><div class="ph-bar" style="height:40%"></div><div class="ph-bar" style="height:70%"></div><div class="ph-bar" style="height:35%"></div><div class="ph-bar hi" style="height:88%"></div><div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:49%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · Process Efficiency</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar hi" style="height:96%"></div><div class="ph-bar" style="height:52%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:85%"></div><div class="ph-bar" style="height:61%"></div><div class="ph-bar" style="height:38%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 4 · Findings Management</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-0">Page 1 / 4 — Executive Overview</span><div class="sc-dots" id="sc-dots-0"><button class="sc-dot active" data-sc="0" data-idx="0"></button><button class="sc-dot" data-sc="0" data-idx="1"></button><button class="sc-dot" data-sc="0" data-idx="2"></button><button class="sc-dot" data-sc="0" data-idx="3"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="0" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="0" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 2 -->
+    <div class="tab-panel" data-panel="1">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>Fintech · Kredivo · 2023</div>
+        <h3 class="panel-title">Customer Insights &amp; Churn Analysis</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">Five-page Power BI report covering customer segmentation, CLV modeling, churn scoring, and sales performance for Kredivo's digital lending platform. Built with 30+ DAX measures for rapid deployment across business units.</p>
+        <div class="panel-metrics"><div class="p-metric"><span class="pm-val">5</span><span class="pm-lbl">Report pages</span></div><div class="p-metric"><span class="pm-val">30+</span><span class="pm-lbl">DAX measures</span></div><div class="p-metric"><span class="pm-val">CLV</span><span class="pm-lbl">Model</span></div></div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Power BI</span><span class="tool-pill">DAX</span><span class="tool-pill">Python</span><span class="tool-pill">SQL</span><span class="tool-pill">Amplitude</span></div>
+        <div class="panel-cta"><a href="#" class="btn-live" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>View live dashboard</a></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Customer Insights</span></div></div>
+          <div class="sc-carousel" data-carousel="1"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar hi" style="height:82%"></div><div class="ph-bar" style="height:52%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar" style="height:40%"></div><div class="ph-bar hi" style="height:94%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:76%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Segmentation</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:60%"></div><div class="ph-bar hi" style="height:90%"></div><div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:72%"></div><div class="ph-bar" style="height:38%"></div><div class="ph-bar hi" style="height:86%"></div><div class="ph-bar" style="height:58%"></div><div class="ph-bar" style="height:50%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Churn Analysis</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:48%"></div><div class="ph-bar" style="height:70%"></div><div class="ph-bar hi" style="height:88%"></div><div class="ph-bar" style="height:55%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:63%"></div><div class="ph-bar" style="height:41%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · CLV Model</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-1">Page 1 / 3 — Segmentation</span><div class="sc-dots" id="sc-dots-1"><button class="sc-dot active" data-sc="1" data-idx="0"></button><button class="sc-dot" data-sc="1" data-idx="1"></button><button class="sc-dot" data-sc="1" data-idx="2"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="1" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="1" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3 -->
+    <div class="tab-panel" data-panel="2">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>Telecom · Telkom · 2020</div>
+        <h3 class="panel-title">Network Performance Monitor</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">Real-time operational dashboard monitoring network health KPIs, downtime events, and regional performance across Telkom Indonesia's nationwide infrastructure. Enabled ops teams to detect and respond to incidents significantly faster.</p>
+        <div class="panel-metrics"><div class="p-metric"><span class="pm-val">Live</span><span class="pm-lbl">Refresh</span></div><div class="p-metric"><span class="pm-val">Multi</span><span class="pm-lbl">Region</span></div><div class="p-metric"><span class="pm-val">KPI</span><span class="pm-lbl">Health</span></div></div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Tableau</span><span class="tool-pill">PostgreSQL</span><span class="tool-pill">SQL</span><span class="tool-pill">Python</span></div>
+        <div class="panel-cta"><span class="btn-live-disabled"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Internal — not public</span></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">public.tableau.com · Network Performance</span></div></div>
+          <div class="sc-carousel" data-carousel="2"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:92%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:64%"></div><div class="ph-bar" style="height:37%"></div><div class="ph-bar hi" style="height:87%"></div><div class="ph-bar" style="height:59%"></div><div class="ph-bar" style="height:76%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Network Overview</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar hi" style="height:85%"></div><div class="ph-bar" style="height:55%"></div><div class="ph-bar" style="height:72%"></div><div class="ph-bar" style="height:42%"></div><div class="ph-bar hi" style="height:98%"></div><div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:47%"></div><div class="ph-bar" style="height:68%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Regional Breakdown</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-2">Page 1 / 2 — Network Overview</span><div class="sc-dots" id="sc-dots-2"><button class="sc-dot active" data-sc="2" data-idx="0"></button><button class="sc-dot" data-sc="2" data-idx="1"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="2" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="2" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 4 -->
+    <div class="tab-panel" data-panel="3">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>Fintech · Kredivo · 2022</div>
+        <h3 class="panel-title">Growth Funnel Analytics</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">Product growth instrumentation and full-funnel analysis for Kredivo's digital lending platform. Tracks activation, engagement, retention, and revenue — delivered weekly to C-Suite to help the product team prioritize growth levers with confidence.</p>
+        <div class="panel-metrics"><div class="p-metric"><span class="pm-val">Weekly</span><span class="pm-lbl">C-suite cadence</span></div><div class="p-metric"><span class="pm-val">Full</span><span class="pm-lbl">Funnel</span></div><div class="p-metric"><span class="pm-val">Retention</span><span class="pm-lbl">Model</span></div></div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Amplitude</span><span class="tool-pill">Tableau</span><span class="tool-pill">SQL</span><span class="tool-pill">Python</span></div>
+        <div class="panel-cta"><a href="#" class="btn-live" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>View live dashboard</a></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">analytics.amplitude.com · Growth Funnel</span></div></div>
+          <div class="sc-carousel" data-carousel="3"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar" style="height:82%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar hi" style="height:90%"></div><div class="ph-bar" style="height:62%"></div><div class="ph-bar" style="height:38%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Funnel Overview</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:52%"></div><div class="ph-bar hi" style="height:80%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar hi" style="height:94%"></div><div class="ph-bar" style="height:58%"></div><div class="ph-bar" style="height:36%"></div><div class="ph-bar" style="height:72%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Retention Cohorts</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:66%"></div><div class="ph-bar" style="height:48%"></div><div class="ph-bar hi" style="height:87%"></div><div class="ph-bar" style="height:53%"></div><div class="ph-bar" style="height:75%"></div><div class="ph-bar hi" style="height:99%"></div><div class="ph-bar" style="height:61%"></div><div class="ph-bar" style="height:43%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · Revenue Metrics</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-3">Page 1 / 3 — Funnel Overview</span><div class="sc-dots" id="sc-dots-3"><button class="sc-dot active" data-sc="3" data-idx="0"></button><button class="sc-dot" data-sc="3" data-idx="1"></button><button class="sc-dot" data-sc="3" data-idx="2"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="3" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="3" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 5 -->
+    <div class="tab-panel" data-panel="4">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>NGO · WRI · 2021</div>
+        <h3 class="panel-title">Environmental Impact Tracker</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">Data pipeline and visualization system for World Resources Institute sustainability metrics. Aggregates field data across multiple regional projects into a unified reporting layer, enabling program managers and donors to track environmental outcomes at a glance.</p>
+        <div class="panel-metrics"><div class="p-metric"><span class="pm-val">Multi</span><span class="pm-lbl">Region data</span></div><div class="p-metric"><span class="pm-val">ETL</span><span class="pm-lbl">Pipeline</span></div><div class="p-metric"><span class="pm-val">Exec</span><span class="pm-lbl">Reporting</span></div></div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Python</span><span class="tool-pill">Power BI</span><span class="tool-pill">SQL</span><span class="tool-pill">dbt</span><span class="tool-pill">PostgreSQL</span></div>
+        <div class="panel-cta"><a href="#" class="btn-live" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>View live dashboard</a></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Environmental Impact</span></div></div>
+          <div class="sc-carousel" data-carousel="4"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:42%"></div><div class="ph-bar" style="height:67%"></div><div class="ph-bar hi" style="height:84%"></div><div class="ph-bar" style="height:53%"></div><div class="ph-bar" style="height:76%"></div><div class="ph-bar hi" style="height:95%"></div><div class="ph-bar" style="height:60%"></div><div class="ph-bar" style="height:47%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Impact Summary</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:58%"></div><div class="ph-bar hi" style="height:79%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar" style="height:88%"></div><div class="ph-bar hi" style="height:96%"></div><div class="ph-bar" style="height:64%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:72%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Regional Breakdown</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-4">Page 1 / 2 — Impact Summary</span><div class="sc-dots" id="sc-dots-4"><button class="sc-dot active" data-sc="4" data-idx="0"></button><button class="sc-dot" data-sc="4" data-idx="1"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="4" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="4" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 6 -->
+    <div class="tab-panel" data-panel="5">
+      <div class="panel-content">
+        <div class="panel-industry"><span class="ind-dot"></span>Banking · BRI · 2024</div>
+        <h3 class="panel-title">Digital Product Performance</h3>
+        <div class="panel-rule"></div>
+        <p class="panel-desc">End-to-end product analytics dashboard for BRI's internal digital audit tool. Tracks feature adoption, active user engagement, and product health metrics — serving as the single source of truth for product decision-making across the team.</p>
+        <div class="panel-metrics"><div class="p-metric"><span class="pm-val">Product</span><span class="pm-lbl">Analytics</span></div><div class="p-metric"><span class="pm-val">Adoption</span><span class="pm-lbl">Tracking</span></div><div class="p-metric"><span class="pm-val">Health</span><span class="pm-lbl">Score</span></div></div>
+        <div class="panel-tools-label">Tools used</div>
+        <div class="panel-tools"><span class="tool-pill">Power BI</span><span class="tool-pill">Microsoft Fabric</span><span class="tool-pill">DAX</span><span class="tool-pill">Figma</span><span class="tool-pill">SQL</span></div>
+        <div class="panel-cta"><span class="btn-live-disabled"><svg viewBox="0 0 24 24" style="width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Internal — not public</span></div>
+      </div>
+      <div class="panel-visual">
+        <div class="screenshot-frame">
+          <div class="sbar"><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-dot"></div><div class="sbar-url"><span class="sbar-url-text">app.powerbi.com · Digital Product Performance</span></div></div>
+          <div class="sc-carousel" data-carousel="5"><div class="sc-track">
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:57%"></div><div class="ph-bar hi" style="height:80%"></div><div class="ph-bar" style="height:45%"></div><div class="ph-bar" style="height:92%"></div><div class="ph-bar hi" style="height:98%"></div><div class="ph-bar" style="height:65%"></div><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:73%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 1 · Product Health</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar hi" style="height:88%"></div><div class="ph-bar" style="height:62%"></div><div class="ph-bar" style="height:78%"></div><div class="ph-bar" style="height:44%"></div><div class="ph-bar" style="height:56%"></div><div class="ph-bar hi" style="height:93%"></div><div class="ph-bar" style="height:68%"></div><div class="ph-bar" style="height:40%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 2 · Feature Adoption</div></div></div></div>
+            <div class="sc-slide"><div class="sc-slide-inner"><div class="screenshot-placeholder"><div class="ph-bars"><div class="ph-bar" style="height:50%"></div><div class="ph-bar" style="height:74%"></div><div class="ph-bar hi" style="height:91%"></div><div class="ph-bar" style="height:59%"></div><div class="ph-bar" style="height:82%"></div><div class="ph-bar" style="height:46%"></div><div class="ph-bar hi" style="height:97%"></div><div class="ph-bar" style="height:67%"></div></div><div class="ph-lines"><div class="ph-line"></div><div class="ph-line short"></div><div class="ph-line"></div></div><div class="upload-hint"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Page 3 · User Engagement</div></div></div></div>
+          </div></div>
+          <div class="sc-controls"><span class="sc-page-label" id="sc-label-5">Page 1 / 3 — Product Health</span><div class="sc-dots" id="sc-dots-5"><button class="sc-dot active" data-sc="5" data-idx="0"></button><button class="sc-dot" data-sc="5" data-idx="1"></button><button class="sc-dot" data-sc="5" data-idx="2"></button></div><div class="sc-arrows"><button class="sc-arr" data-sc="5" data-dir="-1"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button><button class="sc-arr" data-sc="5" data-dir="1"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panels -->
+
+  <!-- PROGRESS -->
+  <div class="tab-progress reveal">
+    <div class="tp-dots"><button class="tp-dot active" data-tab="0"></button><button class="tp-dot" data-tab="1"></button><button class="tp-dot" data-tab="2"></button><button class="tp-dot" data-tab="3"></button><button class="tp-dot" data-tab="4"></button><button class="tp-dot" data-tab="5"></button></div>
+    <span class="tp-label" id="tpLabel">01 / 06</span>
+    <div class="tp-arrows">
+      <button class="tp-arr" id="prevTab"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="tp-arr" id="nextTab"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="sec-kicker reveal"><div class="kicker-rule"></div><span class="kicker-num">02 / Contact</span></div>
+      <div class="contact-tagline reveal reveal-d1">Open to new<br><em>opportunities.</em></div>
+      <div class="contact-rule reveal reveal-d1"></div>
+      <p class="contact-note reveal reveal-d2">Available for full-time roles, consulting, and freelance. Open to IC, manager, relocation, and global remote work across any industry.</p>
+    </div>
+    <div class="reveal reveal-d2">
+      <div class="contact-links">
+        <a href="mailto:hello@dinahaniyah.com" class="contact-row"><div><div class="cr-label">Email</div><div class="cr-value">hello@dinahaniyah.com</div></div><span class="cr-arrow">↗</span></a>
+        <a href="https://linkedin.com/in/dinahaniyah" target="_blank" rel="noopener" class="contact-row"><div><div class="cr-label">LinkedIn</div><div class="cr-value">linkedin.com/in/dinahaniyah</div></div><span class="cr-arrow">↗</span></a>
+        <a href="assets/cv-dina-haniyah.pdf" download class="contact-row"><div><div class="cr-label">Résumé</div><div class="cr-value">Download CV (PDF)</div></div><span class="cr-arrow">↓</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-l">© 2024 Dina Haniyah · Jakarta, Indonesia</span>
+  <span class="footer-r">BI Analyst · DP-600 · Universitas Gadjah Mada</span>
+</footer>
+
+<script>
+/* cursor */
+const dot=document.getElementById('cursorDot'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+if(window.matchMedia('(hover:hover)').matches){
+  let cursorRevealed=false;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX;my=e.clientY;
+    if(!cursorRevealed){cursorRevealed=true;if(dot)dot.style.opacity='1';if(ring)ring.style.opacity='1';}
+  });
+  (function tick(){if(dot){dot.style.left=mx+'px';dot.style.top=my+'px';}rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;if(ring){ring.style.left=rx+'px';ring.style.top=ry+'px';}requestAnimationFrame(tick);})();
+  document.querySelectorAll('a,button,[role="tab"]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{if(ring){ring.style.width='42px';ring.style.height='42px';ring.style.borderColor='rgba(232,66,10,0.7)';}});
+    el.addEventListener('mouseleave',()=>{if(ring){ring.style.width='28px';ring.style.height='28px';ring.style.borderColor='rgba(232,66,10,0.4)';}});
+  });
+}
+
+/* nav */
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40),{passive:true});
+
+/* reveal */
+document.querySelectorAll('.reveal').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('visible');},{threshold:0.08}).observe(el));
+
+/* counter */
+function animCount(el,target,dur=1300){const s=performance.now();(function f(n){const p=Math.min((n-s)/dur,1);el.textContent=Math.floor((1-Math.pow(1-p,3))*target);if(p<1)requestAnimationFrame(f);else el.textContent=target;})(s);}
+document.querySelectorAll('.counter').forEach(el=>new IntersectionObserver(([e])=>{if(e.isIntersecting){animCount(el,+el.dataset.target);}},{threshold:0.5}).observe(el));
+
+/* tabs */
+const tabBtns=document.querySelectorAll('.tab-btn'),panels=document.querySelectorAll('.tab-panel'),tpDots=document.querySelectorAll('.tp-dot'),tpLbl=document.getElementById('tpLabel');
+let cur=0;
+function goTab(i){
+  i=((i%6)+6)%6;
+  tabBtns[cur].classList.remove('active');tabBtns[cur].setAttribute('aria-selected','false');
+  panels[cur].classList.remove('active');tpDots[cur].classList.remove('active');
+  cur=i;
+  tabBtns[i].classList.add('active');tabBtns[i].setAttribute('aria-selected','true');
+  panels[i].classList.add('active');tpDots[i].classList.add('active');
+  tpLbl.textContent=String(i+1).padStart(2,'0')+' / 06';
+  tabBtns[i].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+tabBtns.forEach((b,i)=>b.addEventListener('click',()=>goTab(i)));
+tpDots.forEach((d,i)=>d.addEventListener('click',()=>goTab(i)));
+document.getElementById('prevTab').addEventListener('click',()=>goTab(cur-1));
+document.getElementById('nextTab').addEventListener('click',()=>goTab(cur+1));
+document.addEventListener('keydown',e=>{const r=document.getElementById('work').getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0){if(e.key==='ArrowRight')goTab(cur+1);if(e.key==='ArrowLeft')goTab(cur-1);}});
+
+/* screenshot carousels */
+const scLabels={0:['Page 1 / 4 — Executive Overview','Page 2 / 4 — Workload Analysis','Page 3 / 4 — Process Efficiency','Page 4 / 4 — Findings Management'],1:['Page 1 / 3 — Segmentation','Page 2 / 3 — Churn Analysis','Page 3 / 3 — CLV Model'],2:['Page 1 / 2 — Network Overview','Page 2 / 2 — Regional Breakdown'],3:['Page 1 / 3 — Funnel Overview','Page 2 / 3 — Retention Cohorts','Page 3 / 3 — Revenue Metrics'],4:['Page 1 / 2 — Impact Summary','Page 2 / 2 — Regional Breakdown'],5:['Page 1 / 3 — Product Health','Page 2 / 3 — Feature Adoption','Page 3 / 3 — User Engagement']};
+const scCur={0:0,1:0,2:0,3:0,4:0,5:0};
+function goSlide(id,idx){const c=document.querySelector(`.sc-carousel[data-carousel="${id}"]`);if(!c)return;const total=c.querySelectorAll('.sc-slide').length;idx=((idx%total)+total)%total;scCur[id]=idx;c.querySelector('.sc-track').style.transform=`translateX(-${idx*100}%)`;document.querySelectorAll(`.sc-dot[data-sc="${id}"]`).forEach((d,i)=>d.classList.toggle('active',i===idx));const l=document.getElementById(`sc-label-${id}`);if(l&&scLabels[id])l.textContent=scLabels[id][idx]||'';}
+document.querySelectorAll('.sc-arr').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();goSlide(+b.dataset.sc,scCur[+b.dataset.sc]+(+b.dataset.dir));}));
+document.querySelectorAll('.sc-dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();goSlide(+d.dataset.sc,+d.dataset.idx);}));
+document.querySelectorAll('.sc-carousel').forEach(c=>{const id=+c.dataset.carousel;let sx=0,dr=false;c.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;dr=true;},{passive:true});c.addEventListener('touchend',e=>{if(!dr)return;const d=sx-e.changedTouches[0].clientX;if(Math.abs(d)>40)goSlide(id,scCur[id]+(d>0?1:-1));dr=false;},{passive:true});let mx2=0,md=false;c.addEventListener('mousedown',e=>{mx2=e.clientX;md=true;});c.addEventListener('mouseup',e=>{if(!md)return;const d=mx2-e.clientX;if(Math.abs(d)>40)goSlide(id,scCur[id]+(d>0?1:-1));md=false;});c.addEventListener('mouseleave',()=>{md=false;});});
+</script>
+</body>
+</html>
