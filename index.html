@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dina Haniyah — BI Portfolio</title>
+<title>Dina Haniyah — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -661,6 +661,69 @@ h2.sec-heading em {
 .tp-arr:hover svg { stroke: var(--paper); }
 
 /* ============================================================
+   GALLERY PANEL — "More Work" tab
+============================================================ */
+.gallery-panel {
+  padding: 2rem 0;
+}
+.gallery-intro {
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 1.5rem;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.gallery-item {
+  position: relative;
+  border: 1.5px solid #141210;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 #141210;
+  background: #EDE8DC;
+  aspect-ratio: 16/10;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: default;
+}
+.gallery-item:hover { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 #141210; }
+.gallery-item img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top;
+  display: block;
+}
+.gallery-item-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(20,18,16,0.85), transparent);
+  padding: 1rem 0.75rem 0.5rem;
+  font-family: var(--mono); font-size: 0.5rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(245,240,230,0.85);
+  opacity: 0; transition: opacity 0.2s;
+}
+.gallery-item:hover .gallery-item-label { opacity: 1; }
+.gallery-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: #EDE8DC;
+}
+.gallery-ph-bars {
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 50%; width: 60%;
+}
+.gallery-ph-bar {
+  flex: 1; background: rgba(20,18,16,0.12); border-radius: 1px;
+}
+.gallery-ph-bar.hi { background: rgba(232,66,10,0.25); }
+
+@media (max-width:768px) {
+  .gallery-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width:480px) {
+  .gallery-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
    CONTACT
 ============================================================ */
 #contact {
@@ -821,7 +884,7 @@ footer {
     <!-- eyebrow kicker -->
     <div class="hero-eyebrow">
       <div class="kicker-rule"></div>
-      <span class="kicker-text">Business Intelligence · Jakarta, Indonesia</span>
+      <span class="kicker-text">Senior Business Intelligence · Jakarta, Indonesia</span>
     </div>
 
     <!-- name + cert badges side by side -->
@@ -834,7 +897,7 @@ footer {
           </div>
           <div class="badge-text">
             <span class="badge-title">Microsoft DP-600</span>
-            <span class="badge-sub">Fabric Analytics Engineer</span>
+            <span class="badge-sub">Fabric Analytics Engineer Certified</span>
           </div>
         </div>
         <div class="hero-badge hero-badge--google">
@@ -843,7 +906,7 @@ footer {
           </div>
           <div class="badge-text">
             <span class="badge-title">Google</span>
-            <span class="badge-sub">Data Analytics Cert</span>
+            <span class="badge-sub">Data Analytics Certified</span>
           </div>
         </div>
       </div>
@@ -916,8 +979,8 @@ footer {
 </section>
 
 <footer>
-  <span class="footer-l">© 2024 Dina Haniyah · Jakarta, Indonesia</span>
-  <span class="footer-r">BI Analyst · DP-600 · Universitas Gadjah Mada</span>
+  <span class="footer-l">© <span id="footerYear"></span> Dina Haniyah · Jakarta, Indonesia</span>
+  <span class="footer-r">Senior BI Analyst · Microsoft DP-600 Certified</span>
 </footer>
 
 <script>
@@ -946,18 +1009,36 @@ footer {
                     leave src as "" to show placeholder
    ─────────────────────────────────────────────────────────────────────────────────
 ============================================================ */
+/* ============================================================
+   MORE WORK GALLERY
+   Add as many items as you want. Each item:
+     label — shown on hover overlay
+     src   — image URL or file path, leave "" for placeholder
+============================================================ */
+const MORE_WORK = [
+  { label: 'HR Analytics · Telkom · 2020',             src: '' },
+  { label: 'Sales Performance · Kredivo · 2021',       src: '' },
+  { label: 'Ops Monitoring · Telkom · 2019',           src: '' },
+  { label: 'Budget Tracker · WRI · 2021',              src: '' },
+  { label: 'Loan Portfolio · BRI · 2023',              src: '' },
+  { label: 'User Funnel · Kredivo · 2022',             src: '' },
+  { label: 'Regional KPIs · BRI · 2024',               src: '' },
+  { label: 'Campaign ROI · Kredivo · 2022',            src: '' },
+  { label: 'Audit Summary · BRI · 2023',               src: '' },
+];
+
 const DASHBOARDS = [
   {
-    tab:      'Audit Workload',
-    industry: 'Banking · BRI · 2024',
-    title:    'Audit Workload Intelligence',
-    desc:     'Executive-facing dashboard for an 18-region internal audit function at Bank Rakyat Indonesia. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.',
+    tab:      'Workforce Intelligence',
+    industry: 'Banking',
+    title:    'People & Performance Workforce',
+    desc:     'This dashboard is reflecting of the real project. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.',
     metrics:  [
       { val: '18',   lbl: 'Regions' },
       { val: '6.3K+',lbl: 'Findings' },
       { val: '4',    lbl: 'Report tabs' },
     ],
-    tools:    ['Power BI', 'DAX', 'Star Schema', 'Microsoft Fabric', 'SQL'],
+    tools:    ['Tableau', 'Star Schema', 'Python', 'SQL'],
     liveUrl:  '',
     urlLabel: 'app.powerbi.com · Audit Workload Intelligence',
     pages: [
@@ -968,10 +1049,10 @@ const DASHBOARDS = [
     ],
   },
   {
-    tab:      'Customer Insights',
-    industry: 'Fintech · Kredivo · 2023',
+    tab:      'Credit Risk Analysis',
+    industry: 'Fintech',
     title:    'Customer Insights &amp; Churn Analysis',
-    desc:     'Five-page Power BI report covering customer segmentation, CLV modeling, churn scoring, and sales performance for Kredivos digital lending platform. Built with 30+ DAX measures for rapid deployment across business units.',
+    desc:     'Five-page Power BI report covering customer segmentation, CLV modeling, churn scoring, and sales performance for Kredivo\'s digital lending platform. Built with 30+ DAX measures for rapid deployment across business units.',
     metrics:  [
       { val: '5',   lbl: 'Report pages' },
       { val: '30+', lbl: 'DAX measures' },
@@ -990,7 +1071,7 @@ const DASHBOARDS = [
     tab:      'Network Monitor',
     industry: 'Telecom · Telkom · 2020',
     title:    'Network Performance Monitor',
-    desc:     'Real-time operational dashboard monitoring network health KPIs, downtime events, and regional performance across Telkom Indonesias nationwide infrastructure. Enabled ops teams to detect and respond to incidents significantly faster.',
+    desc:     'Real-time operational dashboard monitoring network health KPIs, downtime events, and regional performance across Telkom Indonesia\'s nationwide infrastructure. Enabled ops teams to detect and respond to incidents significantly faster.',
     metrics:  [
       { val: 'Live',  lbl: 'Refresh' },
       { val: 'Multi', lbl: 'Region' },
@@ -1008,7 +1089,7 @@ const DASHBOARDS = [
     tab:      'Growth Funnel',
     industry: 'Fintech · Kredivo · 2022',
     title:    'Growth Funnel Analytics',
-    desc:     'Product growth instrumentation and full-funnel analysis for Kredivo digital lending platform. Tracks activation, engagement, retention, and revenue — delivered weekly to C-Suite to help the product team prioritize growth levers with confidence.',
+    desc:     'Product growth instrumentation and full-funnel analysis for Kredivo\'s digital lending platform. Tracks activation, engagement, retention, and revenue — delivered weekly to C-Suite to help the product team prioritize growth levers with confidence.',
     metrics:  [
       { val: 'Weekly',   lbl: 'C-suite cadence' },
       { val: 'Full',     lbl: 'Funnel' },
@@ -1045,7 +1126,7 @@ const DASHBOARDS = [
     tab:      'Product Analytics',
     industry: 'Banking · BRI · 2024',
     title:    'Digital Product Performance',
-    desc:     'End-to-end product analytics dashboard for BRI internal digital audit tool. Tracks feature adoption, active user engagement, and product health metrics — serving as the single source of truth for product decision-making across the team.',
+    desc:     'End-to-end product analytics dashboard for BRI\'s internal digital audit tool. Tracks feature adoption, active user engagement, and product health metrics — serving as the single source of truth for product decision-making across the team.',
     metrics:  [
       { val: 'Product', lbl: 'Analytics' },
       { val: 'Adoption',lbl: 'Tracking' },
@@ -1168,12 +1249,38 @@ function buildWork() {
     </div>`;
   }).join('');
 
-  /* progress dots */
+  /* gallery tab — append after DASHBOARDS */
+  const galleryIdx = total;
+  const totalWithGallery = total + 1;
+
+  tabList.innerHTML += `<button class="tab-btn" role="tab" data-tab="${galleryIdx}" aria-selected="false">
+    <span class="tab-num">+</span>More Work
+  </button>`;
+
+  /* gallery panel */
+  const galleryItems = MORE_WORK.map((item, i) => {
+    const bars = [40,70,55,90,35,80,60,45].map((h,j) =>
+      `<div class="gallery-ph-bar${j%3===1?' hi':''}" style="height:${h}%"></div>`
+    ).join('');
+    const inner = item.src
+      ? `<img src="${item.src}" alt="${item.label}">`
+      : `<div class="gallery-placeholder"><div class="gallery-ph-bars">${bars}</div></div>`;
+    return `<div class="gallery-item">${inner}<div class="gallery-item-label">${item.label}</div></div>`;
+  }).join('');
+
+  tabPanels.innerHTML += `<div class="tab-panel" data-panel="${galleryIdx}">
+    <div class="gallery-panel">
+      <p class="gallery-intro">— A selection of other dashboards built across 7+ years</p>
+      <div class="gallery-grid">${galleryItems}</div>
+    </div>
+  </div>`;
+
+  /* progress dots — include gallery tab */
   const tpDots = document.getElementById('tpDots');
-  tpDots.innerHTML = DASHBOARDS.map((_,i) =>
+  tpDots.innerHTML = Array.from({length: totalWithGallery}, (_,i) =>
     `<button class="tp-dot${i===0?' active':''}" data-tab="${i}"></button>`
   ).join('');
-  document.getElementById('tpLabel').textContent = `01 / ${String(total).padStart(2,'0')}`;
+  document.getElementById('tpLabel').textContent = `01 / ${String(totalWithGallery).padStart(2,'0')}`;
 }
 
 /* ── Build on load ── */
@@ -1205,6 +1312,9 @@ if(window.matchMedia('(hover:hover)').matches){
   });
 }
 
+/* ── Footer year ── */
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+
 /* ── Nav scroll ── */
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40),{passive:true});
 
@@ -1225,7 +1335,7 @@ document.querySelectorAll('.counter').forEach(el=>
 /* ── Tabs ── */
 let curTab=0;
 function goTab(i){
-  const total=DASHBOARDS.length;
+  const total=DASHBOARDS.length+1; /* +1 for gallery tab */
   i=((i%total)+total)%total;
   document.querySelectorAll('.tab-btn')[curTab]?.classList.remove('active');
   document.querySelectorAll('.tab-btn')[curTab]?.setAttribute('aria-selected','false');
