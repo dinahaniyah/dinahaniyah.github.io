@@ -33,6 +33,7 @@
   --sans:        'DM Sans', sans-serif;
   --nav-h:       56px;
   --ease:        cubic-bezier(0.16,1,0.3,1);
+  --sc-h:        clamp(220px, 40vw, 420px);
 }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -460,6 +461,10 @@ h2.sec-heading em {
   padding-top: 3.5rem;
   animation: panel-in 0.4s var(--ease) forwards;
 }
+/* gallery tab: single column, full width */
+.tab-panel.active.is-gallery {
+  display: block;
+}
 @keyframes panel-in {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -570,7 +575,7 @@ h2.sec-heading em {
 .sc-carousel { position: relative; overflow: hidden; }
 .sc-track { display: flex; transition: transform 0.45s var(--ease); will-change: transform; }
 .sc-slide { flex-shrink: 0; width: 100%; }
-.sc-slide-inner { width: 100%; height: 280px; overflow: hidden; display: flex; align-items: flex-start; justify-content: center; }
+.sc-slide-inner { width: 100%; height: var(--sc-h); overflow: hidden; display: flex; align-items: flex-start; justify-content: center; }
 .sc-slide-inner img {
   width: 100%;
   height: auto; /* full image, no crop */
@@ -583,12 +588,12 @@ h2.sec-heading em {
 }
 /* on hover: pan from top to bottom, revealing the full dashboard */
 .screenshot-frame:hover .sc-slide-inner img {
-  transform: translateY(calc(-100% + 280px));
+  transform: translateY(calc(-100% + var(--sc-h)));
 }
 
 /* placeholder */
 .screenshot-placeholder {
-  width: 100%; height: 280px; display: flex; flex-direction: column;
+  width: 100%; height: var(--sc-h); display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 1rem;
   background: var(--paper-3); padding: 1.5rem;
 }
@@ -665,6 +670,8 @@ h2.sec-heading em {
 ============================================================ */
 .gallery-panel {
   padding: 2rem 0;
+  grid-column: 1 / -1; /* span full width, escape 2-col tab-panel grid */
+  width: 100%;
 }
 .gallery-intro {
   font-family: var(--mono); font-size: 0.6rem;
@@ -673,8 +680,9 @@ h2.sec-heading em {
 }
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
+  width: 100%;
 }
 .gallery-item {
   position: relative;
@@ -716,6 +724,9 @@ h2.sec-heading em {
 }
 .gallery-ph-bar.hi { background: rgba(232,66,10,0.25); }
 
+@media (max-width:960px) {
+  .gallery-grid { grid-template-columns: repeat(3,1fr); }
+}
 @media (max-width:768px) {
   .gallery-grid { grid-template-columns: repeat(2,1fr); }
 }
@@ -830,6 +841,7 @@ footer {
   .tab-list { gap:0.3rem; padding-bottom:1.25rem; }
   .tab-btn { height:34px; padding:0 0.75rem 0 0.35rem; font-size:0.52rem; gap:0.4rem; }
   .tab-num { width:19px; height:19px; font-size:0.46rem; }
+  --sc-h: clamp(200px, 55vw, 320px); /* taller on mobile since full width */
   .tab-panel.active { gap:1.5rem; padding-top:1.75rem; }
   .panel-title { font-size:clamp(1.4rem,5vw,1.8rem); }
   .panel-desc { font-size:0.875rem; }
@@ -897,7 +909,7 @@ footer {
           </div>
           <div class="badge-text">
             <span class="badge-title">Microsoft DP-600</span>
-            <span class="badge-sub">Fabric Analytics Engineer Certified</span>
+            <span class="badge-sub">Fabric Analytics Engineer</span>
           </div>
         </div>
         <div class="hero-badge hero-badge--google">
@@ -906,7 +918,7 @@ footer {
           </div>
           <div class="badge-text">
             <span class="badge-title">Google</span>
-            <span class="badge-sub">Data Analytics Certified</span>
+            <span class="badge-sub">Data Analytics Cert</span>
           </div>
         </div>
       </div>
@@ -980,7 +992,7 @@ footer {
 
 <footer>
   <span class="footer-l">© <span id="footerYear"></span> Dina Haniyah · Jakarta, Indonesia</span>
-  <span class="footer-r">Senior BI Analyst · Microsoft DP-600 Certified</span>
+  <span class="footer-r">BI Analyst · DP-600 · Universitas Gadjah Mada</span>
 </footer>
 
 <script>
@@ -1029,16 +1041,16 @@ const MORE_WORK = [
 
 const DASHBOARDS = [
   {
-    tab:      'Workforce Intelligence',
-    industry: 'Banking',
-    title:    'People & Performance Workforce',
-    desc:     'This dashboard is reflecting of the real project. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.',
+    tab:      'Audit Workload',
+    industry: 'Banking · BRI · 2024',
+    title:    'Audit Workload Intelligence',
+    desc:     'Executive-facing dashboard for an 18-region internal audit function at Bank Rakyat Indonesia. Tracks workload distribution, process efficiency, and findings management across 365+ sub-projects and 17,500+ worksheets — presented weekly to Senior Leadership and C-Suite.',
     metrics:  [
       { val: '18',   lbl: 'Regions' },
       { val: '6.3K+',lbl: 'Findings' },
       { val: '4',    lbl: 'Report tabs' },
     ],
-    tools:    ['Tableau', 'Star Schema', 'Python', 'SQL'],
+    tools:    ['Power BI', 'DAX', 'Star Schema', 'Microsoft Fabric', 'SQL'],
     liveUrl:  '',
     urlLabel: 'app.powerbi.com · Audit Workload Intelligence',
     pages: [
@@ -1049,8 +1061,8 @@ const DASHBOARDS = [
     ],
   },
   {
-    tab:      'Credit Risk Analysis',
-    industry: 'Fintech',
+    tab:      'Customer Insights',
+    industry: 'Fintech · Kredivo · 2023',
     title:    'Customer Insights &amp; Churn Analysis',
     desc:     'Five-page Power BI report covering customer segmentation, CLV modeling, churn scoring, and sales performance for Kredivo\'s digital lending platform. Built with 30+ DAX measures for rapid deployment across business units.',
     metrics:  [
@@ -1268,7 +1280,7 @@ function buildWork() {
     return `<div class="gallery-item">${inner}<div class="gallery-item-label">${item.label}</div></div>`;
   }).join('');
 
-  tabPanels.innerHTML += `<div class="tab-panel" data-panel="${galleryIdx}">
+  tabPanels.innerHTML += `<div class="tab-panel is-gallery" data-panel="${galleryIdx}">
     <div class="gallery-panel">
       <p class="gallery-intro">— A selection of other dashboards built across 7+ years</p>
       <div class="gallery-grid">${galleryItems}</div>
@@ -1394,7 +1406,7 @@ document.querySelectorAll('.sc-carousel').forEach(c=>{
   c.addEventListener('mouseup',e=>{if(!md)return;const d=mx2-e.clientX;if(Math.abs(d)>40)goSlide(id,scCur[id]+(d>0?1:-1));md=false;});
   c.addEventListener('mouseleave',()=>{md=false;});
   c.querySelectorAll('.sc-slide-inner').forEach(slide=>{
-    slide.addEventListener('touchstart',()=>{const img=slide.querySelector('img');if(img)img.style.transform='translateY(calc(-100% + 280px))';},{passive:true});
+    slide.addEventListener('touchstart',()=>{const img=slide.querySelector('img');if(img){const h=slide.offsetHeight||420;img.style.transform=`translateY(calc(-100% + ${h}px))`;};},{passive:true});
     slide.addEventListener('touchend',()=>{const img=slide.querySelector('img');if(img)img.style.transform='translateY(0%)';},{passive:true});
   });
 });
